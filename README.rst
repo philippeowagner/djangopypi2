@@ -46,6 +46,76 @@ Then add an include in your url config for ``djangopypi.urls``::
 This will make the repository interface be accessible at ``/pypi/``.
 
 
+Package upload directory
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+By default packages are uploaded to ``<MEDIA_ROOT>/dists`` so you need both
+to ensure that ``MEDIA_ROOT`` is assigned a value and that the
+``<MEDIA_ROOT>/dists`` directory is created and writable by the web server.
+
+You may change the directory to which packages are uploaded by setting
+``DJANGOPYPI_RELEASE_UPLOAD_TO``; this will be a sub-directory of ``MEDIA_ROOT``.
+
+
+Other settings
+^^^^^^^^^^^^^^
+
+Look in the ``djangopy`` source code for ``settings.py`` to see other
+settings you can override.
+
+
+Data initialisation
+^^^^^^^^^^^^^^^^^^^
+
+Load the classifier database with the management command::
+
+ $ python manage.py loadclassifiers
+
+
+Package download handler
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Packages are downloaded from the following URL:
+``<host>/simple/<package>/dists/<package>-<version>.tar.gz#<md5 hash>``
+
+You will need to configure either your development server to deliver the
+package from the upload directory, or your web server (e.g. NGINX or Apache).
+
+To configure your Django development server ensure that ``urls.py`` looks
+something like following::
+
+ import os
+ from django.conf.urls import patterns, include, url
+ from django.conf import settings
+
+ # ... other code here including Django admin auto-discover ...
+
+ urlpatterns = patterns('',
+     # ... url patterns...
+
+     url(r'^simple/[\w\d_\.\-]+/dists/(?P<path>.*)$', 'django.views.static.serve',
+             {'document_root': os.path.join(settings.MEDIA_ROOT,
+                                            settings.DJANGOPYPI_RELEASE_UPLOAD_TO)}),
+     url(r'', include("djangopypi.urls")),
+
+     # .. url patterns...
+ )
+
+This should only be used for the Django development server.
+
+When using a web server, configure that to deliver packages from the
+upload dist directory directly from this URL. For example, you may have
+a clause in an NGINX configuration file something like the following::
+
+ server {
+   ... configuration...
+   
+   location ~ ^/simple/[a-zA-Z0-9\,\-\.]+/dists/ {
+       alias /path/to/upload/dists/;
+   }
+
+   ... configuration...
+ }
 
 Uploading to your PyPI
 ----------------------
@@ -93,3 +163,11 @@ To push the package to the local pypi::
 
 .. [#] ``djangopypi`` is South enabled, if you are using South then you will need
    to run the South ``migrate`` command to get the tables.
+
+Installing a package with pip
+-----------------------------
+
+To install your package with pip::
+
+ $ pip install -i http://my.pypiserver.com/simple/ <PACKAGE>
+
