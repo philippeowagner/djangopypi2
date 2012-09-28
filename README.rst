@@ -47,7 +47,7 @@ This will make the repository interface be accessible at ``/pypi/``.
 
 
 Package upload directory
-^^^^^^^^^^^^^^^^^^^^^^^^
+++++++++++++++++++++++++
 
 By default packages are uploaded to ``<MEDIA_ROOT>/dists`` so you need both
 to ensure that ``MEDIA_ROOT`` is assigned a value and that the
@@ -58,14 +58,14 @@ You may change the directory to which packages are uploaded by setting
 
 
 Other settings
-^^^^^^^^^^^^^^
+++++++++++++++
 
 Look in the ``djangopy`` source code for ``settings.py`` to see other
 settings you can override.
 
 
 Data initialisation
-^^^^^^^^^^^^^^^^^^^
++++++++++++++++++++
 
 Load the classifier database with the management command::
 
@@ -73,7 +73,7 @@ Load the classifier database with the management command::
 
 
 Package download handler
-^^^^^^^^^^^^^^^^^^^^^^^^
+++++++++++++++++++++++++
 
 Packages are downloaded from the following URL:
 ``<host>/simple/<package>/dists/<package>-<version>.tar.gz#<md5 hash>``
