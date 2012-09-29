@@ -60,7 +60,7 @@ You may change the directory to which packages are uploaded by setting
 Other settings
 ++++++++++++++
 
-Look in the ``djangopy`` source code for ``settings.py`` to see other
+Look in the ``djangopypi`` source code for ``settings.py`` to see other
 settings you can override.
 
 
