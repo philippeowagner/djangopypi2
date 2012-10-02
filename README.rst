@@ -40,6 +40,14 @@ Add ``djangopypi`` to your ``INSTALLED_APPS``setting::
         'djangopypi',
     )
 
+And add the following to ``TEMPLATE_CONTEXT_PROCESSORS`` (this setting
+is absent by default, in which case simply add it)::
+
+    TEMPLATE_CONTEXT_PROCESSORS = (
+        'django.contrib.auth.context_processors.auth',
+        'django.core.context_processors.request',
+    )
+
 Then run ``syncdb``::
 
     $ ./manage.py syncdb

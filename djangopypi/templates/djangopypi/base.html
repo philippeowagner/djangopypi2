@@ -14,7 +14,14 @@
     {% block navbar %}
     <div class="navbar">
       <div class="navbar-inner">
-        <a class="brand" href="/">Django PYPI</a>
+        <div class="container pull-left">
+          <a class="brand" href="/">Django PYPI</a>
+        </div>
+        <p class="navbar-text pull-right">
+          {% if request.user.is_authenticated %}
+          <i class="icon-user"></i> {{ request.user.username }}
+          {% endif %}
+        </p>
       </div>
     </div>
     {% endblock %}
