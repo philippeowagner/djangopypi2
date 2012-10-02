@@ -1,15 +1,14 @@
+#!/usr/bin/env python
 import os
 from setuptools import setup, find_packages
-
-
 
 def fread(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
-version = '0.4.5'
+version = '0.5.0'
 
 setup(
-    name='djangopypi',
+    name='djangopypi2',
     version=version,
     description="A Django application that emulates the Python Package Index.",
     long_description=fread("README.rst")+"\n\n"+fread('Changelog.rst')+"\n\n"+fread('AUTHORS.rst'),
@@ -32,7 +31,7 @@ setup(
     author_email='askh@opera.com',
     maintainer='Benjamin Liles',
     maintainer_email='benliles@gmail.com',
-    url='http://github.com/popen2/djangopypi',
+    url='http://github.com/popen2/djangopypi2',
     license='BSD',
     packages=find_packages(),
     include_package_data=True,

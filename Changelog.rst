@@ -1,6 +1,12 @@
 History
 =======
 
+0.5.0 (In progress)
+-------------------
+* Added bootstrap-based user interface
+* Split djangopypi to several Django apps
+* Switched to relative imports
+
 0.4.4 (2012-04-18)
 ------------------
 

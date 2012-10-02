@@ -4,24 +4,38 @@ DjangoPyPI
 DjangoPyPI is a Django application that provides a re-implementation of the 
 `Python Package Index <http://pypi.python.org>`_.  
 
+Compatibility Note
+------------------
+This is a fork of the original ``djangopypi`` package. This version is somewhat
+different than the original version by its design, and it might affect older
+version in that the database table names are different than the original ones.
+It is highly recommended that you install a fresh copy of this package and
+manually transfer you data from your installation.
+
+Since the table names in this installation are different, the same database can
+be used for the migration.
+Unfortunately there are too many versions of ``djangopypi`` our there, so it's
+quite dangerous to create ``south`` migrations for them.
+Sorry for the inconvenience.
+
 Installation
 ------------
 
 Path
 ____
 
-The first step is to get ``djangopypi`` into your Python path.
+The first step is to get ``djangopypi2`` into your Python path.
 
 Buildout
 ++++++++
 
-Simply add ``djangopypi`` to your list of ``eggs`` and run buildout again it 
+Simply add ``djangopypi2`` to your list of ``eggs`` and run buildout again it 
 should downloaded and installed properly.
 
 EasyInstall/Setuptools
 ++++++++++++++++++++++
 
-If you have setuptools installed, you can use ``easy_install djangopypi``
+If you have setuptools installed, you can use ``easy_install djangopypi2``
 
 Manual
 ++++++
@@ -33,11 +47,13 @@ Download and unpack the source then run::
 Django Settings
 _______________
 
-Add ``djangopypi`` to your ``INSTALLED_APPS``setting::
+Make sure all the following apps are in your ``INSTALLED_APPS`` setting::
 
     INSTALLED_APPS = (
         ...
-        'djangopypi',
+        'south',
+        'djangopypi2.apps.frontend',
+        'djangopypi2.apps.bootstrap',
     )
 
 And add the following to ``TEMPLATE_CONTEXT_PROCESSORS`` (this setting
@@ -48,25 +64,24 @@ is absent by default, in which case simply add it)::
         'django.core.context_processors.request',
     )
 
-Then run ``syncdb``::
+Then, make sure the ``STATIC_ROOT`` setting is configured properly::
 
-    $ ./manage.py syncdb
+    STATIC_ROOT = '/path/to/static/root'
 
-Afterwards add an include in your url config for ``djangopypi.urls``::
+And update the urlpatterns to include ``djangopypi2.urls``::
 
     urlpatterns = patterns("",
         ...
-        url(r'', include("djangopypi.urls"))
+        url(r'', include("djangopypi2.apps.frontend.urls"))
     )
 
 This will make the repository interface be accessible at ``/pypi/``.
 
-Finally, make sure the ``STATIC_ROOT`` setting is configured properly::
+Finally, run the following Django commands to sync everything ``syncdb``::
 
-    STATIC_ROOT = '/path/to/static/root'
-
-and run ``collectstatic`` to make sure static files are ready for use::
-
+    $ ./manage.py syncdb
+    $ ./manage.py migrate djangopypi2.apps.frontend
+    $ ./manage.py loadclassifiers
     $ ./manage.py collectstatic
 
 Package upload directory
@@ -78,21 +93,6 @@ to ensure that ``MEDIA_ROOT`` is assigned a value and that the
 
 You may change the directory to which packages are uploaded by setting
 ``DJANGOPYPI_RELEASE_UPLOAD_TO``; this will be a sub-directory of ``MEDIA_ROOT``.
-
-
-Other settings
-++++++++++++++
-
-Look in the ``djangopypi`` source code for ``settings.py`` to see other
-settings you can override.
-
-
-Data initialisation
-+++++++++++++++++++
-
-Load the classifier database with the management command::
-
- $ python manage.py loadclassifiers
 
 
 Package download handler
@@ -119,7 +119,7 @@ something like following::
      url(r'^simple/[\w\d_\.\-]+/dists/(?P<path>.*)$', 'django.views.static.serve',
              {'document_root': os.path.join(settings.MEDIA_ROOT,
                                             settings.DJANGOPYPI_RELEASE_UPLOAD_TO)}),
-     url(r'', include("djangopypi.urls")),
+     url(r'', include("djangopypi2.urls")),
 
      # .. url patterns...
  )
@@ -184,7 +184,7 @@ To push the package to the local pypi::
 
     $ python setup.py mregister -r local sdist mupload -r local
 
-.. [#] ``djangopypi`` is South enabled, if you are using South then you will need
+.. [#] ``djangopypi2`` is South enabled, if you are using South then you will need
    to run the South ``migrate`` command to get the tables.
 
 Installing a package with pip
@@ -203,7 +203,7 @@ pip in the following manner::
    --extra-index-url=http://pypi.python.org/simple/ \
    -r requirements.txt
 
-(substitute your djangopypi server URL for the ``localhost`` one in this example)
+(substitute your djangopypi2 server URL for the ``localhost`` one in this example)
 
 The downside is that each install of a package hosted on the repository in
 ``--extra-index-url`` will start with a call to the first repository which
