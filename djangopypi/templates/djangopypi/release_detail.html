@@ -4,10 +4,13 @@
 {% block title %}{{ release }}{% endblock %}
 {% block extra_head %}
 <link rel="meta" title="DOAP" type="application/rdf+xml"
-      href="{% url djangopypi-release-doap package=release.package.name version=release.version %}">{% endblock %}
-{% block content %}
+      href="{% url djangopypi-release-doap package=release.package.name version=release.version %}">
+{% endblock %}
 
+{% block content %}
 <h1>{{ release }}</h1>
+<p class="lead">{{ release.summary }}</p>
+
 {% ifnotequal release release.package.latest %}
 <div class="alert alert-error">
   This is not the latest version.<br>
@@ -16,37 +19,54 @@
 </div>
 {% endifnotequal %}
 
-<div class="well">
-  {{ release.description|saferst }}
+<div class="row">
+  <span class="span8">
+    <div class="well">
+      {{ release.description|saferst }}
+    </div>
+  </span>
+
+  <span class="span4">
+    {% for classifier in release.classifiers %}
+    <span class="label label-success">{{ classifier }}</span><br>
+    {% endfor %}
+  </span>
 </div>
 
-{% if release.distributions.count %}
-<h2>Downloads</h2>
-<table class="table table-striped">
-  <thead>
-    <th>Type</th>
-    <th>Python Version</th>
-    <th>Created</th>
-    <th>Uploader</th>
-    <th>Download</th>
-  </thead>
+<div class="row">
+  <span class="span12">
+    {% if release.distributions.count %}
+    <h2>Downloads</h2>
+    <table class="table table-striped">
+      <thead>
+        <th>Type</th>
+        <th>Python Version</th>
+        <th>Created</th>
+        <th>Uploader</th>
+        <th>Download</th>
+        <th>Size</th>
+      </thead>
 
-  <tbody>
-    {% for dist in release.distributions.all %}
-    <tr>
-      <td>{{ dist.filetype }}</td>
-      <td>
-        <span class="label label-info">Python {{ dist.pyversion }}</span>
-      </td>
-      <td>{{ dist.created }}</td>
-      <td><i class="icon-user"></i> {{ dist.uploader }}</td>
-      <td>
-        <a class="btn btn-primary btn-small" href="{{ dist.get_absolute_url }}">Download</a>
-        {{ dist.content.size|filesizeformat }}
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% endif %}
+      <tbody>
+        {% for dist in release.distributions.all %}
+        <tr>
+          <td>{{ dist.filetype }}</td>
+          <td>
+            <span class="label label-info">Python {{ dist.pyversion }}</span>
+          </td>
+          <td>{{ dist.created }}</td>
+          <td><i class="icon-user"></i> {{ dist.uploader }}</td>
+          <td>
+            <a class="btn btn-primary btn-small" href="{{ dist.get_absolute_url }}">Download</a>
+          </td>
+          <td>
+            {{ dist.content.size|filesizeformat }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </span>
+</div>
 {% endblock %}
