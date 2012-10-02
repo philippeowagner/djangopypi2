@@ -7,7 +7,7 @@ from djangopypi.http import parse_distutils_request
 from djangopypi.models import Package, Release
 from djangopypi.views.xmlrpc import parse_xmlrpc_request
 
-log = getLogger('djangopypi.views')
+log = getLogger(__name__)
 
 @csrf_exempt
 def root(request, fallback_view=None, **kwargs):
