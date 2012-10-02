@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 def fread(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
-version = '0.4.4'
+version = '0.4.5'
 
 setup(
     name='djangopypi',
@@ -32,7 +32,7 @@ setup(
     author_email='askh@opera.com',
     maintainer='Benjamin Liles',
     maintainer_email='benliles@gmail.com',
-    url='http://github.com/benliles/djangopypi',
+    url='http://github.com/popen2/djangopypi',
     license='BSD',
     packages=find_packages(),
     include_package_data=True,
