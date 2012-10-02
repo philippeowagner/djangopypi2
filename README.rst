@@ -33,10 +33,18 @@ Download and unpack the source then run::
 Django Settings
 _______________
 
-Add ``djangopypi`` to your ``INSTALLED_APPS`` setting and run ``syncdb`` again 
-to get the database tables [#]_.
+Add ``djangopypi`` to your ``INSTALLED_APPS``setting::
 
-Then add an include in your url config for ``djangopypi.urls``::
+    INSTALLED_APPS = (
+        ...
+        'djangopypi',
+    )
+
+Then run ``syncdb``::
+
+    $ ./manage.py syncdb
+
+Afterwards add an include in your url config for ``djangopypi.urls``::
 
     urlpatterns = patterns("",
         ...
@@ -45,6 +53,13 @@ Then add an include in your url config for ``djangopypi.urls``::
 
 This will make the repository interface be accessible at ``/pypi/``.
 
+Finally, make sure the ``STATIC_ROOT`` setting is configured properly::
+
+    STATIC_ROOT = '/path/to/static/root'
+
+and run ``collectstatic`` to make sure static files are ready for use::
+
+    $ ./manage.py collectstatic
 
 Package upload directory
 ++++++++++++++++++++++++
@@ -185,3 +200,10 @@ pip in the following manner::
 The downside is that each install of a package hosted on the repository in
 ``--extra-index-url`` will start with a call to the first repository which
 will fail before pip falls back to the alternative.
+
+Copyright and Credits
+---------------------
+
+Originally written by Benjamin Liles from http://github.com/benliles/djangopypi .
+
+This software uses Twitter Bootstrap for UI: http://twitter.github.com/bootstrap/ .
