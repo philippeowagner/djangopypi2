@@ -1,4 +1,5 @@
 {% extends 'djangopypi/base.html' %}
+{% load safemarkup %}
 
 {% block title %}{{ package.name }}{% endblock %}
 {% block extra_head %}
@@ -6,40 +7,31 @@
 {% endblock %}
 
 {% block content %}
-<h1>The {{ package.name }} package</h1>
+<h1>{{ package.name }} Releases</h1>
+
+{% if not package.latest %}
+<div>No releases yet!</div>
+{% else %}
+
 <div class="well">
-  {% if not package.latest %}
-  <div>No releases yet!</div>
-  {% endif %}
-  {% if package.latest %}
   {% with package.latest as release %}
-  {% load safemarkup %}
   {{ release.description|saferst }}
-  {% if release.distributions.count %}
+  {% endwith %}
 </div>
 
-<h2>Releases</h2>
 <table class="table table-striped">
   <thead>
-    <th>Created</th>
-    <th>Uploader</th>
-    <th>Python version</th>
-    <th>Type</th>
-    <th>Download</th>
+    <th>Version</th>
+    <th>Downloads</th>
+    <th>First Created</th>
   </thead>
-  {% for dist in release.distributions.all %}
+  {% for release in package.releases.all %}
   <tr>
-    <td>{{ dist.created }}</td>
-    <td>{{ dist.uploader }}</td>
-    <td>{{ dist.pyversion }}</td>
-    <td>{{ dist.filetype }}</td>
-    <td>
-      <a class="btn btn-inverse" href="{{ dist.get_absolute_url }}">Download ({{ dist.content.size|filesizeformat }})</a>
-    </td>
+    <td><a href="{{ release.get_absolute_url }}">Version {{ release.version }}</a></td>
+    <td>{{ release.distributions.count }}</td>
+    <td>{{ release.created }}</td>
   </tr>
   {% endfor %}
 </table>
-{% endif %}
-{% endwith %}
 {% endif %}
 {% endblock %}
