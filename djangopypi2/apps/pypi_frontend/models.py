@@ -5,7 +5,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import simplejson as json
 from django.utils.datastructures import MultiValueDict
 from django.contrib.auth.models import User
-from . import defaults
+from ..pypi_config.models import GlobalConfiguration
+from ..pypi_config.models import DistributionType
+from ..pypi_config.models import PythonVersion
 
 class PackageInfoField(models.Field):
     description = u'Python Package Information Field'
@@ -116,16 +118,17 @@ class Release(models.Model):
         return ('djangopypi2-release', (), {'package': self.package.name,
                                             'version': self.version})
 
+def distribution_upload_path(instance, filename):
+    global_config = GlobalConfiguration.objects.latest()
+    return global_config.upload_directory
 
 class Distribution(models.Model):
     release = models.ForeignKey(Release, related_name="distributions",
                                 editable=False)
-    content = models.FileField(upload_to=settings.DJANGOPYPI_RELEASE_UPLOAD_TO)
+    content = models.FileField(upload_to=distribution_upload_path)
     md5_digest = models.CharField(max_length=32, blank=True, editable=False)
-    filetype = models.CharField(max_length=32, blank=False,
-                                choices=settings.DJANGOPYPI_DIST_FILE_TYPES)
-    pyversion = models.CharField(max_length=16, blank=True,
-                                 choices=settings.DJANGOPYPI_PYTHON_VERSIONS)
+    filetype = models.ForeignKey(DistributionType, related_name='distributions')
+    pyversion = models.ForeignKey(PythonVersion, related_name='distributions')
     comment = models.CharField(max_length=255, blank=True)
     signature = models.TextField(blank=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
@@ -137,10 +140,7 @@ class Distribution(models.Model):
 
     @property
     def display_filetype(self):
-        for key,value in settings.DJANGOPYPI_DIST_FILE_TYPES:
-            if key == self.filetype:
-                return value
-        return self.filetype
+        return self.filetype.name
 
     @property
     def path(self):
@@ -171,23 +171,3 @@ try:
     add_introspection_rules([], ["^djangopypi2\.apps\.pypi_frontend\.models\.PackageInfoField"])
 except ImportError:
     pass
-
-
-class MasterIndex(models.Model):
-    title = models.CharField(max_length=255)
-    url = models.CharField(max_length=255)
-    
-    def __unicode__(self):
-        return self.title
-
-class MirrorLog(models.Model):
-    master = models.ForeignKey(MasterIndex, related_name='logs')
-    created = models.DateTimeField(default='now')
-    releases_added = models.ManyToManyField(Release, blank=True,
-                                            related_name='mirror_sources')
-    
-    def __unicode__(self):
-        return '%s (%s)' % (self.master, str(self.created),)
-    
-    class Meta:
-        get_latest_by = "created"

@@ -1,12 +1,8 @@
 from django.conf import settings
 from django.contrib import admin
-from .models import *
+from . import models
 
-admin.site.register(Package)
-admin.site.register(Release)
-admin.site.register(Distribution)
-admin.site.register(Review)
-
-if getattr(settings,'DJANGOPYPI_MIRRORING', False):
-    admin.site.register(MasterIndex)
-    admin.site.register(MirrorLog)
+admin.site.register(models.Package)
+admin.site.register(models.Release)
+admin.site.register(models.Distribution)
+admin.site.register(models.Review)

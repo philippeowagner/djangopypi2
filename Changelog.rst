@@ -3,9 +3,14 @@ History
 
 0.5.0 (In progress)
 -------------------
+* Removed south support (too many changes), hopefully added in a future version
 * Added bootstrap-based user interface
 * Split djangopypi to several Django apps
 * Switched to relative imports
+* All configuration resides in the database and editable from the admin
+* Static files are automatically served when DEBUG = True
+* Removed loadclassifiers command
+* Contains fixtures with initial data for all configuration models
 
 0.4.4 (2012-04-18)
 ------------------

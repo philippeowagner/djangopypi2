@@ -53,7 +53,6 @@ Make sure all the following apps are in your ``INSTALLED_APPS`` setting::
 
     INSTALLED_APPS = (
         ...
-        'south',
         'djangopypi2.apps.pypi_ui',
         'djangopypi2.apps.pypi_config',
         'djangopypi2.apps.pypi_frontend',
@@ -90,7 +89,7 @@ Finally, run the following Django commands to sync everything ``syncdb``::
     $ ./manage.py syncdb
     $ ./manage.py migrate pypi_config
     $ ./manage.py migrate pypi_frontend
-    $ ./manage.py loadclassifiers
+    $ ./manage.py loaddata initial
     $ ./manage.py collectstatic
 
 Package upload directory
@@ -192,9 +191,6 @@ that supports multiple servers.
 To push the package to the local pypi::
 
     $ python setup.py mregister -r local sdist mupload -r local
-
-.. [#] ``djangopypi2`` is South enabled, if you are using South then you will need
-   to run the South ``migrate`` command to get the tables.
 
 Installing a package with pip
 -----------------------------
