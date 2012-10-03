@@ -19,8 +19,9 @@ from urlparse import urlsplit
 from setuptools.package_index import PackageIndex
 from django.contrib.auth.models import User
 from django.utils.datastructures import MultiValueDict
-from ...models import Package, Release, Classifier
-
+from ....pypi_config.models import Classifier
+from ...models import Package
+from ...models import Release
 
 @contextmanager
 def tempdir():

@@ -8,10 +8,13 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.datastructures import MultiValueDict
 from django.contrib.auth import login
 
+from ...pypi_config.models import Classifier
 from ..metadata import METADATA_FIELDS
 from ..decorators import basic_auth
 from ..forms import PackageForm, ReleaseForm
-from ..models import Package, Release, Distribution, Classifier
+from ..models import Package
+from ..models import Release
+from ..models import Distribution
 
 log = getLogger(__name__)
 

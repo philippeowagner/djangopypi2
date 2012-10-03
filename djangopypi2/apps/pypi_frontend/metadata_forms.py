@@ -1,6 +1,6 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from .models import Classifier
+from ..pypi_config.models import Classifier
 
 metadata10licenses = ('Artistic', 'BSD', 'DFSG', 'GNU GPL', 'GNU LGPL',
                      'MIT', 'Mozilla PL', 'public domain', 'Python',

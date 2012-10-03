@@ -40,17 +40,6 @@ class PackageInfoField(models.Field):
     def get_internal_type(self):
         return 'TextField'
 
-class Classifier(models.Model):
-    name = models.CharField(max_length=255, primary_key=True)
-
-    class Meta:
-        verbose_name = _(u"classifier")
-        verbose_name_plural = _(u"classifiers")
-        ordering = ('name',)
-
-    def __unicode__(self):
-        return self.name
-
 class Package(models.Model):
     name = models.CharField(max_length=255, unique=True, primary_key=True,
                             editable=False)
