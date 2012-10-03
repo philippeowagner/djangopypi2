@@ -16,7 +16,7 @@ def index(request, **kwargs):
     return list_detail.object_list(request, **kwargs)
 
 def simple_index(request, **kwargs):
-    kwargs.setdefault('template_name', 'djangopypi2/package_list_simple.html')
+    kwargs.setdefault('template_name', 'pypi_frontend/package_list_simple.html')
     return index(request, **kwargs)
 
 def details(request, package, proxy_folder='pypi', **kwargs):
@@ -35,11 +35,11 @@ def details(request, package, proxy_folder='pypi', **kwargs):
 
 def simple_details(request, package, **kwargs):
     kwargs.setdefault('proxy_folder', 'simple')
-    kwargs.setdefault('template_name', 'djangopypi2/package_detail_simple.html')
+    kwargs.setdefault('template_name', 'pypi_frontend/package_detail_simple.html')
     return details(request, package, **kwargs)
 
 def doap(request, package, **kwargs):
-    kwargs.setdefault('template_name', 'djangopypi2/package_doap.xml')
+    kwargs.setdefault('template_name', 'pypi_frontend/package_doap.xml')
     kwargs.setdefault('mimetype', 'text/xml')
     return details(request, package, **kwargs)
 
@@ -59,7 +59,7 @@ def search(request, **kwargs):
 def manage(request, package, **kwargs):
     kwargs['object_id'] = package
     kwargs.setdefault('form_class', PackageForm)
-    kwargs.setdefault('template_name', 'djangopypi2/package_manage.html')
+    kwargs.setdefault('template_name', 'pypi_frontend/package_manage.html')
     kwargs.setdefault('template_object_name', 'package')
 
     return create_update.update_object(request, **kwargs)
@@ -72,7 +72,7 @@ def manage_versions(request, package, **kwargs):
     kwargs['formset_factory_kwargs']['extra'] = 0
 
     kwargs.setdefault('formset_factory', inlineformset_factory(Package, Release, **kwargs['formset_factory_kwargs']))
-    kwargs.setdefault('template_name', 'djangopypi2/package_manage_versions.html')
+    kwargs.setdefault('template_name', 'pypi_frontend/package_manage_versions.html')
     kwargs.setdefault('template_object_name', 'package')
     kwargs.setdefault('extra_context',{})
     kwargs.setdefault('mimetype',settings.DEFAULT_CONTENT_TYPE)

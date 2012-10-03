@@ -30,7 +30,7 @@ def details(request, package, version, **kwargs):
                                                             package,))
     
     kwargs.setdefault('template_object_name','release')
-    kwargs.setdefault('template_name','djangopypi2/release_detail.html')
+    kwargs.setdefault('template_name','pypi_frontend/release_detail.html')
     kwargs.setdefault('extra_context',{})
     kwargs.setdefault('mimetype',settings.DEFAULT_CONTENT_TYPE)
     
@@ -41,7 +41,7 @@ def details(request, package, version, **kwargs):
                               mimetype=kwargs['mimetype'])
 
 def doap(request, package, version, **kwargs):
-    kwargs.setdefault('template_name','djangopypi2/release_doap.xml')
+    kwargs.setdefault('template_name','pypi_frontend/release_doap.xml')
     kwargs.setdefault('mimetype', 'text/xml')
     return details(request, package, version, **kwargs)
 
@@ -56,14 +56,14 @@ def manage(request, package, version, **kwargs):
     kwargs['object_id'] = release.pk
     
     kwargs.setdefault('form_class', ReleaseForm)
-    kwargs.setdefault('template_name', 'djangopypi2/release_manage.html')
+    kwargs.setdefault('template_name', 'pypi_frontend/release_manage.html')
     kwargs.setdefault('template_object_name', 'release')
     
     return create_update.update_object(request, **kwargs)
 
 @user_maintains_package()
 def manage_metadata(request, package, version, **kwargs):
-    kwargs.setdefault('template_name', 'djangopypi2/release_manage.html')
+    kwargs.setdefault('template_name', 'pypi_frontend/release_manage.html')
     kwargs.setdefault('template_object_name', 'release')
     kwargs.setdefault('extra_context',{})
     kwargs.setdefault('mimetype',settings.DEFAULT_CONTENT_TYPE)
@@ -126,7 +126,7 @@ def manage_files(request, package, version, **kwargs):
     kwargs['formset_factory_kwargs']['extra'] = 0
     
     kwargs.setdefault('formset_factory', inlineformset_factory(Release, Distribution, **kwargs['formset_factory_kwargs']))
-    kwargs.setdefault('template_name', 'djangopypi2/release_manage_files.html')
+    kwargs.setdefault('template_name', 'pypi_frontend/release_manage_files.html')
     kwargs.setdefault('template_object_name', 'release')
     kwargs.setdefault('extra_context',{})
     kwargs.setdefault('mimetype',settings.DEFAULT_CONTENT_TYPE)
@@ -165,7 +165,7 @@ def upload_file(request, package, version, **kwargs):
     kwargs.setdefault('post_save_redirect', reverse('djangopypi2-release-manage-files',
                                                     kwargs={'package': package,
                                                             'version': version}))
-    kwargs.setdefault('template_name', 'djangopypi2/release_upload_file.html')
+    kwargs.setdefault('template_name', 'pypi_frontend/release_upload_file.html')
     kwargs.setdefault('template_object_name', 'release')
     kwargs.setdefault('extra_context',{})
     kwargs.setdefault('mimetype',settings.DEFAULT_CONTENT_TYPE)

@@ -55,7 +55,7 @@ Make sure all the following apps are in your ``INSTALLED_APPS`` setting::
         ...
         'south',
         'djangopypi2.apps.pypi_frontend',
-        'djangopypi2.apps.pypi_bootstrap',
+        'djangopypi2.apps.pypi_ui',
     )
 
 And add the following to ``TEMPLATE_CONTEXT_PROCESSORS`` (this setting
