@@ -75,11 +75,15 @@ And update the urlpatterns to include ``djangopypi2.urls``::
 
     urlpatterns = patterns("",
         ...
-        url(r'', include("djangopypi2.apps.pypi_config.urls"))
-        url(r'', include("djangopypi2.apps.pypi_frontend.urls"))
+        url(r'', include("djangopypi2.urls"))
     )
 
-This will make the repository interface be accessible at ``/pypi/``.
+This serves the following:
+* ``/``:: Normal web interface.
+* ``/pypi/``:: Repository interface.
+* ``/simple/``:: Simple interface.
+* ``/static/``:: Your static files (only if DEBUG=True)
+* ``/favicon.ico``
 
 Finally, run the following Django commands to sync everything ``syncdb``::
 
@@ -216,7 +220,8 @@ will fail before pip falls back to the alternative.
 
 Copyright and Credits
 ---------------------
+Originally written by Benjamin Liles from http://github.com/benliles/djangopypi
 
-Originally written by Benjamin Liles from http://github.com/benliles/djangopypi .
+This software uses Twitter Bootstrap for UI: http://twitter.github.com/bootstrap/
 
-This software uses Twitter Bootstrap for UI: http://twitter.github.com/bootstrap/ .
+Favicon taken from http://pypi.python.org/favicon.ico
