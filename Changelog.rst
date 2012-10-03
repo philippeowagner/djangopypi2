@@ -1,11 +1,16 @@
 History
 =======
+0.5.2 (2010-10-03)
+------------------
+* Organize code in distutils views
+* Detect binary platform (in case of bdist_*) from filename
+
 0.5.1 (2012-10-03)
 ------------------
 * Provide ready-to-deploy Django project within the package
 
 0.5.0 (2012-10-03)
--------------------
+------------------
 * Removed south support (too many changes), hopefully added in a future version
 * Added bootstrap-based user interface
 * Split djangopypi to several Django apps

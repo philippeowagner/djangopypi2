@@ -40,6 +40,7 @@
     <table class="table table-striped">
       <thead>
         <th>Type</th>
+        <th>Platform</th>
         <th>Python Version</th>
         <th>Created</th>
         <th>Uploader</th>
@@ -51,6 +52,11 @@
         {% for dist in release.distributions.all %}
         <tr>
           <td>{{ dist.filetype }}</td>
+          <td>
+            {% if dist.platform %}
+            {{ dist.platform }}
+            {% endif %}
+          </td>
           <td>
             <span class="label label-info">Python {{ dist.pyversion }}</span>
           </td>

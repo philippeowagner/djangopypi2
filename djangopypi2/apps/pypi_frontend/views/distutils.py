@@ -1,4 +1,6 @@
-import os,re
+import os
+import re
+import itertools
 from logging import getLogger
 
 from django.conf import settings
@@ -11,6 +13,7 @@ from django.contrib.auth import login
 from ...pypi_config.models import Classifier
 from ...pypi_config.models import DistributionType
 from ...pypi_config.models import PythonVersion
+from ...pypi_config.models import PlatformName
 from ..metadata import METADATA_FIELDS
 from ..decorators import basic_auth
 from ..forms import PackageForm, ReleaseForm
@@ -20,49 +23,73 @@ from ..models import Distribution
 
 log = getLogger(__name__)
 
-ALREADY_EXISTS_FMT = _(
-    "A file named '%s' already exists for %s. Please create a new release.")
+class BadRequest(Exception):
+    pass
+
+class Forbidden(Exception):
+    pass
 
 @basic_auth
 @transaction.commit_manually
 def register_or_upload(request):
-    if request.method != 'POST':
+    try:
+        _verify_post_request(request)
+        package = _get_package(request)
+        _verify_credentials(request, package)
+        release = _get_release(request, package)
+        _apply_metadata(request, release)
+        response = _handle_uploads(request, release)
+    except BadRequest, error:
         transaction.rollback()
-        return HttpResponseBadRequest('Only post requests are supported')
-    
+        return HttpResponseBadRequest(str(error))
+    except Forbidden, error:
+        transaction.rollback()
+        return HttpResponseForbidden(str(error))
+    except Exception, error:
+        transaction.rollback()
+        raise
+
+    transaction.commit()
+    return HttpResponse(response)
+
+def _verify_post_request(request):
+    if request.method != 'POST':
+        raise BadRequest('Only post requests are supported')
+
+def _get_package(request):
     name = request.POST.get('name',None).strip()
     
     if not name:
-        transaction.rollback()
-        return HttpResponseBadRequest('No package name specified')
-    
-    try:
-        package = Package.objects.get(name=name)
-    except Package.DoesNotExist:
-        package = Package.objects.create(name=name)
+        raise BadRequest('No package name specified')
+
+    package, created = Package.objects.get_or_create(name=name)
+    if created:
         package.owners.add(request.user)
-    
-    if (request.user not in package.owners.all() and 
-        request.user not in package.maintainers.all()):
-        
-        transaction.rollback()
-        return HttpResponseForbidden('You are not an owner/maintainer of %s' % (package.name,))
-    
-    version = request.POST.get('version',None).strip()
-    metadata_version = request.POST.get('metadata_version', None).strip()
-    
-    if not version or not metadata_version:
-        transaction.rollback()
-        return HttpResponseBadRequest('Release version and metadata version must be specified')
-    
+        package.maintainers.add(request.user)
+        package.save()
+
+    return package
+
+def _verify_credentials(request, package):
+    if request.user not in itertools.chain(package.owners.all(), package.maintainers.all()):
+        raise Forbidden('You are not an owner/maintainer of %s' % (package.name, ))
+
+def _get_release(request, package):
+    version = request.POST.get('version', '').strip()
+    if not version:
+        raise BadRequest('Release version must be specified')
+
+    release, created = Release.objects.get_or_create(package=package, version=version)
+    if created:
+        release.save()
+
+    return release
+
+def _apply_metadata(request, release):
+    metadata_version = request.POST.get('metadata_version', '').strip()
     if not metadata_version in METADATA_FIELDS:
-        transaction.rollback()
-        return HttpResponseBadRequest('Metadata version must be one of: %s' 
-                                      (', '.join(METADATA_FIELDS.keys()),))
-    
-    release, created = Release.objects.get_or_create(package=package,
-                                                     version=version)
-    
+        raise BadRequest('Metadata version must be present and one of: %s' % (', '.join(METADATA_FIELDS.keys()), ))
+
     if (('classifiers' in request.POST or 'download_url' in request.POST) and 
         metadata_version == '1.0'):
         metadata_version = '1.1'
@@ -82,53 +109,78 @@ def register_or_upload(request):
                                      filter(lambda v: v != 'UNKNOWN', value))
     
     release.save()
+
+def _detect_duplicate_upload(request, release, upload):
+    if any(os.path.basename(dist.content.name) == uploaded.name
+           for dist in release.distributions.all()):
+        raise BadRequest('That file has already been uploaded...')
+
+def _get_distribution_type(request):
+    filetype, created = DistributionType.objects.get_or_create(key=request.POST.get('filetype','sdist'))
+    if created:
+        filetype.name = filetype.key
+        filetype.save()
+    return filetype
+
+def _get_python_version(request):
+    textual_pyversion = request.POST.get('pyversion','')
+    if textual_pyversion == '':
+        pyversion = None
+    else:
+        try:
+            major, minor = (int(x) for x in textual_pyversion.split('.'))
+        except ValueError:
+            raise BadRequest('Invalid Python version number %r' % (textual_pyversion, ))
+        pyversion, created = PythonVersion.objects.get_or_create(major=major, minor=minor)
+        if created:
+            pyversion.save()
+    return pyversion
+
+def _deduce_platform_from_filename(uploaded):
+    filename_mo = re.match(r'^(?P<package_name>[\w.]+)-(?P<version>[\w.]+)-py(?P<python_version>\d+\.\d+)-(?P<platform_key>[\w.-]+)$',
+                           os.path.splitext(uploaded.name)[0])
+    if filename_mo is None:
+        return None
+
+    platform_key = filename_mo.groupdict()['platform_key']
+    platform, created = PlatformName.objects.get_or_create(key=platform_key)
+    if created:
+        platform.name = platform.key
+        platform.save()
+
+    return platform
+
+def _calculate_md5(request, uploaded):
+    return request.POST.get('md5_digest', '')
+
+def _handle_uploads(request, release):
     if not 'content' in request.FILES:
-        transaction.commit()
-        return HttpResponse('release registered')
+        return 'release registered'
     
     uploaded = request.FILES.get('content')
-    
-    for dist in release.distributions.all():
-        if os.path.basename(dist.content.name) == uploaded.name:
-            """ Need to add handling optionally deleting old and putting up new """
-            transaction.rollback()
-            return HttpResponseBadRequest('That file has already been uploaded...')
+    _detect_duplicate_upload(request, release, upload)
 
-    md5_digest = request.POST.get('md5_digest','')
-    
-    try:
-        filetype, created = DistributionType.objects.get_or_create(key=request.POST.get('filetype','sdist'))
-        if created:
-            filetype.name = filetype.key
-            filetype.save()
+    new_file = Distribution.objects.create(
+        release    = release,
+        content    = uploaded,
+        filetype   = _get_distribution_type(request),
+        pyversion  = _get_python_version(request),
+        platform   = _deduce_platform_from_filename(uploaded),
+        uploader   = request.user,
+        comment    = request.POST.get('comment',''),
+        signature  = request.POST.get('gpg_signature',''),
+        md5_digest = _calculate_md5(request, uploaded),
+    )
 
-        textual_pyversion = request.POST.get('pyversion','')
-        if textual_pyversion == '':
-            pyversion = None
-        else:
-            major, minor = (int(x) for x in textual_pyversion.split('.'))
-            pyversion, created = PythonVersion.objects.get_or_create(major=major, minor=minor)
-            if created:
-                pyversion.save()
-
-        new_file = Distribution.objects.create(release=release,
-                                               content=uploaded,
-                                               filetype=filetype,
-                                               pyversion=pyversion,
-                                               uploader=request.user,
-                                               comment=request.POST.get('comment',''),
-                                               signature=request.POST.get('gpg_signature',''),
-                                               md5_digest=md5_digest)
-    except Exception, e:
-        transaction.rollback()
-        log.exception('Error when storing upload: %s', e)
-        return HttpResponseServerError('Failure when storing upload')
-    
-    transaction.commit()
-    
-    return HttpResponse('upload accepted')
+    return 'upload accepted'
 
 def list_classifiers(request, mimetype='text/plain'):
     response = HttpResponse(mimetype=mimetype)
     response.write(u'\n'.join(map(lambda c: c.name,Classifier.objects.all())))
     return response
+
+ACTION_VIEWS = dict(
+    file_upload      = register_or_upload, #``sdist`` command
+    submit           = register_or_upload, #``register`` command
+    list_classifiers = list_classifiers, #``list_classifiers`` command
+)

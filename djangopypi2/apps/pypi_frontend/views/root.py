@@ -1,21 +1,14 @@
 from logging import getLogger
 from django.conf import settings
 from django.http import HttpResponseNotAllowed
-
-from ..decorators import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt
 from ..http import parse_distutils_request
 from ..models import Package, Release
 from .xmlrpc import parse_xmlrpc_request
 from . import releases
-from . import distutils
+from .distutils import ACTION_VIEWS
 
 log = getLogger(__name__)
-    
-ACTION_VIEWS = {
-    "file_upload": distutils.register_or_upload, #``sdist`` command
-    "submit": distutils.register_or_upload, #``register`` command
-    "list_classifiers": distutils.list_classifiers, #``list_classifiers`` command
-}
 
 @csrf_exempt
 def root(request, **kwargs):

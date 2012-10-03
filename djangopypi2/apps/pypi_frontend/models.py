@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from ..pypi_config.models import GlobalConfiguration
 from ..pypi_config.models import DistributionType
 from ..pypi_config.models import PythonVersion
+from ..pypi_config.models import PlatformName
 
 class PackageInfoField(models.Field):
     description = u'Python Package Information Field'
@@ -130,6 +131,8 @@ class Distribution(models.Model):
     filetype = models.ForeignKey(DistributionType, related_name='distributions')
     pyversion = models.ForeignKey(PythonVersion, related_name='distributions', null=True,
                                   help_text='Python version, or None for any version of Python')
+    platform = models.ForeignKey(PlatformName, related_name='distributions', null=True,
+                                 help_text='Platform name or None if platform agnostic')
     comment = models.CharField(max_length=255, blank=True)
     signature = models.TextField(blank=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
@@ -153,7 +156,7 @@ class Distribution(models.Model):
     class Meta:
         verbose_name = _(u"distribution")
         verbose_name_plural = _(u"distributions")
-        unique_together = ("release", "filetype", "pyversion")
+        unique_together = ("release", "filetype", "pyversion", "platform")
 
     def __unicode__(self):
         return self.filename
