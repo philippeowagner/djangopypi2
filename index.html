@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Djangopypi2 by popen2</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Djangopypi2</h1>
+        <p class="header">Simple PyPI server written in django.</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/popen2/djangopypi2/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/popen2/djangopypi2/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/popen2/djangopypi2">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/popen2">popen2</a></p>
+
+
+      </header>
+      <section>
+        <h1>DjangoPyPI 2</h1>
+
+<p>DjangoPyPi2 is a fork of the original DjangoPyPi project, providing re-implementation of the 
+<code>Python Package Index &lt;http://pypi.python.org&gt;</code>, with awesome user-interfaces based on Twitter Bootstrap and a full web management interface.</p>
+
+<h2>Installation</h2>
+
+<pre><code>$ virtualenv pypi-site
+$ source pypi-site/bin/activate
+$ pip install django south djangopypi2
+</code></pre>
+
+<h2>Configuration</h2>
+
+<p>In your <code>settings.py</code></p>
+
+<pre><code>INSTALLED_APPS = (
+    ...
+    'south',
+    'djangopypi2.apps.frontend',
+    'djangopypi2.apps.bootstrap',
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.request',
+)
+
+STATIC_ROOT = '/path/to/static/root'
+MEDIA_ROOT  = '/path/to/media/root'
+</code></pre>
+
+<p>In <code>urls.py</code></p>
+
+<pre><code>urlpatterns = patterns("",
+    ...
+    url(r'', include("djangopypi2.apps.frontend.urls"))
+)
+</code></pre>
+
+<p>Seal everything up</p>
+
+<pre><code>$ ./manage.py syncdb
+$ ./manage.py migrate djangopypi2.apps.frontend
+$ ./manage.py loadclassifiers
+$ ./manage.py collectstatic
+</code></pre>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		          <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-35278801-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
