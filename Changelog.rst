@@ -1,5 +1,8 @@
 History
 =======
+0.5.1 (2012-10-03)
+------------------
+* Provide ready-to-deploy Django project within the package
 
 0.5.0 (2012-10-03)
 -------------------

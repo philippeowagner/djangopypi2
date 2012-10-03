@@ -23,130 +23,49 @@ Sorry for the inconvenience.
 Installation
 ------------
 
-Path
-____
+DjangoPyPi2 is a self-contained Django project along with its apps. If you want
+fine-grained control, you can looks at the sources of the apps found in the
+``djangopypi2.apps`` package.
 
-The first step is to get ``djangopypi2`` into your Python path.
+The most simple way to install ``djangopypi2`` is by:
 
-Buildout
-++++++++
+    # Make sure we run with Bash, create a virtualenv and install packages
+    $ bash
+    $ virtualenv pypi-site
+    $ source pypi-site/bin/activate
+    $ pip install django gunicorn djangopypi2
 
-Simply add ``djangopypi2`` to your list of ``eggs`` and run buildout again it 
-should downloaded and installed properly.
+    # Configure our installation (all data is kept in ~/.djangopypi2)
+    $ manage-pypi-site syncdb
+    $ manage-pypi-site collectstatic
+    $ manage-pypi-site loaddata initial
 
-EasyInstall/Setuptools
-++++++++++++++++++++++
+That's it, we're now ready to run our server
 
-If you have setuptools installed, you can use ``easy_install djangopypi2``
+Running
+-------
+It's easiest to see our server running by executing
 
-Manual
-++++++
+    $ gunicorn_django djangopypi2.website.settings
 
-Download and unpack the source then run::
+Then surfing to http://localhost:8000/ .
 
-    $ python setup.py install
+For a permanent setup, simply create a ``supervisor <http://supervisord.org/>``
+configuration:
 
-Django Settings
-_______________
-
-Make sure all the following apps are in your ``INSTALLED_APPS`` setting::
-
-    INSTALLED_APPS = (
-        ...
-        'djangopypi2.apps.pypi_ui',
-        'djangopypi2.apps.pypi_config',
-        'djangopypi2.apps.pypi_frontend',
-    )
-
-And add the following to ``TEMPLATE_CONTEXT_PROCESSORS`` (this setting
-is absent by default, in which case simply add it)::
-
-    TEMPLATE_CONTEXT_PROCESSORS = (
-        'django.contrib.auth.context_processors.auth',
-        'django.core.context_processors.request',
-    )
-
-Then, make sure the ``STATIC_ROOT`` setting is configured properly::
-
-    STATIC_ROOT = '/path/to/static/root'
-
-And update the urlpatterns to include ``djangopypi2.urls``::
-
-    urlpatterns = patterns("",
-        ...
-        url(r'', include("djangopypi2.urls"))
-    )
-
-This serves the following:
-* ``/``:: Normal web interface.
-* ``/pypi/``:: Repository interface.
-* ``/simple/``:: Simple interface.
-* ``/static/``:: Your static files (only if DEBUG=True)
-* ``/favicon.ico``
-
-Finally, run the following Django commands to sync everything ``syncdb``::
-
-    $ ./manage.py syncdb
-    $ ./manage.py migrate pypi_config
-    $ ./manage.py migrate pypi_frontend
-    $ ./manage.py loaddata initial
-    $ ./manage.py collectstatic
+    [program:djangopypi2]
+    user = www-data
+    directory = /path/to/virtualenv
+    command = /path/to/virtualenv/bin/gunicorn_django djangopypi2.website.settings
 
 Package upload directory
 ++++++++++++++++++++++++
 
-By default packages are uploaded to ``<MEDIA_ROOT>/dists`` so you need both
-to ensure that ``MEDIA_ROOT`` is assigned a value and that the
-``<MEDIA_ROOT>/dists`` directory is created and writable by the web server.
+Packages are uploaded to ``~/.djangopypi2/media/dists/`` by default.
 
-You may change the directory to which packages are uploaded by setting
-``DJANGOPYPI_RELEASE_UPLOAD_TO``; this will be a sub-directory of ``MEDIA_ROOT``.
-
-
-Package download handler
-++++++++++++++++++++++++
-
-Packages are downloaded from the following URL:
-``<host>/simple/<package>/dists/<package>-<version>.tar.gz#<md5 hash>``
-
-You will need to configure either your development server to deliver the
-package from the upload directory, or your web server (e.g. NGINX or Apache).
-
-To configure your Django development server ensure that ``urls.py`` looks
-something like following::
-
- import os
- from django.conf.urls import patterns, include, url
- from django.conf import settings
-
- # ... other code here including Django admin auto-discover ...
-
- urlpatterns = patterns('',
-     # ... url patterns...
-
-     url(r'^simple/[\w\d_\.\-]+/dists/(?P<path>.*)$', 'django.views.static.serve',
-             {'document_root': os.path.join(settings.MEDIA_ROOT,
-                                            settings.DJANGOPYPI_RELEASE_UPLOAD_TO)}),
-     url(r'', include("djangopypi2.urls")),
-
-     # .. url patterns...
- )
-
-This should only be used for the Django development server.
-
-When using a web server, configure that to deliver packages from the
-upload dist directory directly from this URL. For example, you may have
-a clause in an NGINX configuration file something like the following::
-
- server {
-   ... configuration...
-   
-   location ~ ^/simple/[a-zA-Z0-9\,\-\.]+/dists/ {
-       alias /path/to/upload/dists/;
-   }
-
-   ... configuration...
- }
+You can change this setting by setting up a Django project with more specific
+settings, or have a look at the admin interface's ``Global Configuration``
+section to see if you configure your desired behavior in there.
 
 Uploading to your PyPI
 ----------------------
