@@ -4,16 +4,14 @@ from django.conf import settings
 from django.views.static import serve as static_serve
 
 def static_urls():
-    '''Returns nothing if we're not in DEBUG, and allows for static
-    file serving from this server if the STATIC_URL points to a
-    relative location in this server.
+    '''Returns urls for for static file serving from this server. In case
+    the STATIC_URL points to an absolute server, we don't serve static
+    files from this server.
     '''
-    if not settings.DEBUG:
-        return ()
     parsed_url = urlparse.urlparse(settings.STATIC_URL)
     if parsed_url.netloc:
-        log.warn('Cannot serve STATIC files since settings.STATIC_URL points outside this server.')
-        return ()
+        log.debug('Cannot serve STATIC files since settings.STATIC_URL points outside this server.')
+        return patterns('')
     return patterns('',
                     url(r'^' + settings.STATIC_URL.strip('/') + r'/(?P<path>.*)$',
                         static_serve, dict(document_root=settings.STATIC_ROOT)))
