@@ -20,7 +20,7 @@ class DistributionUploadForm(forms.ModelForm):
     class Meta:
         model = Distribution
         fields = ('content','comment','filetype','pyversion',)
-    
+        
     def clean_content(self):
         content = self.cleaned_data['content']
         storage = self.instance.content.storage

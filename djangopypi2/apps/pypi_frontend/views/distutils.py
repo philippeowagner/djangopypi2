@@ -9,6 +9,8 @@ from django.utils.datastructures import MultiValueDict
 from django.contrib.auth import login
 
 from ...pypi_config.models import Classifier
+from ...pypi_config.models import DistributionType
+from ...pypi_config.models import PythonVersion
 from ..metadata import METADATA_FIELDS
 from ..decorators import basic_auth
 from ..forms import PackageForm, ReleaseForm
@@ -95,17 +97,31 @@ def register_or_upload(request):
     md5_digest = request.POST.get('md5_digest','')
     
     try:
+        filetype, created = DistributionType.objects.get_or_create(key=request.POST.get('filetype','sdist'))
+        if created:
+            filetype.name = filetype.key
+            filetype.save()
+
+        textual_pyversion = request.POST.get('pyversion','')
+        if textual_pyversion == '':
+            pyversion = None
+        else:
+            major, minor = (int(x) for x in textual_pyversion.split('.'))
+            pyversion, created = PythonVersion.objects.get_or_create(major=major, minor=minor)
+            if created:
+                pyversion.save()
+
         new_file = Distribution.objects.create(release=release,
                                                content=uploaded,
-                                               filetype=request.POST.get('filetype','sdist'),
-                                               pyversion=request.POST.get('pyversion',''),
+                                               filetype=filetype,
+                                               pyversion=pyversion,
                                                uploader=request.user,
                                                comment=request.POST.get('comment',''),
                                                signature=request.POST.get('gpg_signature',''),
                                                md5_digest=md5_digest)
     except Exception, e:
         transaction.rollback()
-        log.exception('Failure when storing upload')
+        log.exception('Error when storing upload: %s', e)
         return HttpResponseServerError('Failure when storing upload')
     
     transaction.commit()

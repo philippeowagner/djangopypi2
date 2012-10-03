@@ -128,7 +128,8 @@ class Distribution(models.Model):
     content = models.FileField(upload_to=distribution_upload_path)
     md5_digest = models.CharField(max_length=32, blank=True, editable=False)
     filetype = models.ForeignKey(DistributionType, related_name='distributions')
-    pyversion = models.ForeignKey(PythonVersion, related_name='distributions')
+    pyversion = models.ForeignKey(PythonVersion, related_name='distributions', null=True,
+                                  help_text='Python version, or None for any version of Python')
     comment = models.CharField(max_length=255, blank=True)
     signature = models.TextField(blank=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
