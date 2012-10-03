@@ -54,8 +54,8 @@ Make sure all the following apps are in your ``INSTALLED_APPS`` setting::
     INSTALLED_APPS = (
         ...
         'south',
-        'djangopypi2.apps.frontend',
-        'djangopypi2.apps.bootstrap',
+        'djangopypi2.apps.pypi_frontend',
+        'djangopypi2.apps.pypi_bootstrap',
     )
 
 And add the following to ``TEMPLATE_CONTEXT_PROCESSORS`` (this setting
@@ -74,7 +74,7 @@ And update the urlpatterns to include ``djangopypi2.urls``::
 
     urlpatterns = patterns("",
         ...
-        url(r'', include("djangopypi2.apps.frontend.urls"))
+        url(r'', include("djangopypi2.apps.pypi_frontend.urls"))
     )
 
 This will make the repository interface be accessible at ``/pypi/``.
@@ -82,7 +82,7 @@ This will make the repository interface be accessible at ``/pypi/``.
 Finally, run the following Django commands to sync everything ``syncdb``::
 
     $ ./manage.py syncdb
-    $ ./manage.py migrate djangopypi2.apps.frontend
+    $ ./manage.py migrate pypi_frontend
     $ ./manage.py loadclassifiers
     $ ./manage.py collectstatic
 

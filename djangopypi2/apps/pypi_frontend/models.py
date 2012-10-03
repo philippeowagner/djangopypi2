@@ -179,7 +179,7 @@ class Review(models.Model):
 
 try:
     from south.modelsinspector import add_introspection_rules
-    add_introspection_rules([], ["^djangopypi2\.apps\.frontend\.models\.PackageInfoField"])
+    add_introspection_rules([], ["^djangopypi2\.apps\.pypi_frontend\.models\.PackageInfoField"])
 except ImportError:
     pass
 
