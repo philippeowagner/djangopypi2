@@ -26,7 +26,7 @@ DjangoPyPi2 is a self-contained Django project along with its apps. If you want
 fine-grained control, you can looks at the sources of the apps found in the
 ``djangopypi2.apps`` package.
 
-The most simple way to install ``djangopypi2`` is by:
+The most simple way to install ``djangopypi2`` is by::
 
     # Make sure we run with Bash, create a virtualenv and install packages
     $ bash
@@ -43,14 +43,14 @@ That's it, we're now ready to run our server
 
 Running
 -------
-It's easiest to see our server running by executing
+It's easiest to see our server running by executing::
 
     $ gunicorn_django djangopypi2.website.settings
 
 Then surfing to http://localhost:8000/ .
 
 For a permanent setup, simply create a ``supervisor <http://supervisord.org/>``
-configuration:
+configuration::
 
     [program:djangopypi2]
     user = www-data
