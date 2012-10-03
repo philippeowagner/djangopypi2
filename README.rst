@@ -1,6 +1,5 @@
 DjangoPyPI 2
 ============
-
 DjangoPyPI is a Django application that provides a re-implementation of the 
 `Python Package Index <http://pypi.python.org>`_.
 Using Twitter Bootstrap for UI, forked from the original DjangoPyPi project,
@@ -59,8 +58,7 @@ configuration:
     command = /path/to/virtualenv/bin/gunicorn_django djangopypi2.website.settings
 
 Package upload directory
-++++++++++++++++++++++++
-
+-------------------------
 Packages are uploaded to ``~/.djangopypi2/media/dists/`` by default.
 
 You can change this setting by setting up a Django project with more specific
