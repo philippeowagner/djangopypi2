@@ -1,3 +1,4 @@
+from urlparse import urljoin
 from django.conf import settings
 from django.db.models.query import Q
 from django.http import Http404, HttpResponseRedirect
@@ -5,10 +6,12 @@ from django.forms.models import inlineformset_factory
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
 from django.views.generic import list_detail, create_update
-
+from ...pypi_config.models import MirrorSite
 from ..decorators import user_owns_package, user_maintains_package
-from ..models import Package, Release
-from ..forms import SimplePackageSearchForm, PackageForm
+from ..models import Package
+from ..models import Release
+from ..forms import SimplePackageSearchForm
+from ..forms import PackageForm
 
 def index(request, **kwargs):
     kwargs.setdefault('template_object_name', 'package')
@@ -24,14 +27,12 @@ def details(request, package, proxy_folder='pypi', **kwargs):
     kwargs.setdefault('queryset', Package.objects.all())
     try:
         return list_detail.object_detail(request, object_id=package, **kwargs)
-    except Http404, e:
-        if settings.DJANGOPYPI_PROXY_MISSING:
-            return HttpResponseRedirect('%s/%s/%s/' % 
-                                        (settings.DJANGOPYPI_PROXY_BASE_URL.rstrip('/'),
-                                         proxy_folder,
-                                         package))
+    except Http404, not_found:
+        for mirror_site in MirrorSite.objects.filter(enabled=True):
+            url = urljoin(mirror_site.url, package)
+            mirror_site.logs.create(action=url)
+            return HttpResponseRedirect(url)
         raise Http404(u'%s is not a registered package' % (package,))
-
 
 def simple_details(request, package, **kwargs):
     kwargs.setdefault('proxy_folder', 'simple')

@@ -89,12 +89,9 @@ class DistributionType(models.Model):
         return self.name
 
 class MirrorSite(models.Model):
-    POLICIES = ('Duplicate', 'Redirect')
- 
     enabled = models.BooleanField(default=False)
     name = models.CharField(max_length=64)
     url = models.CharField(max_length=255, unique=True)
-    policy = models.CharField(max_length=16, default=POLICIES[0], choices=zip(POLICIES, POLICIES))
 
     def __unicode__(self):
         return self.name
@@ -105,7 +102,7 @@ class MirrorLog(models.Model):
     action = models.CharField(max_length=256)
     
     def __unicode__(self):
-        return '%s (%s)' % (self.master, str(self.created))
+        return self.action
     
     class Meta:
         get_latest_by = 'created'

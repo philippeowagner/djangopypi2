@@ -1,5 +1,11 @@
 History
 =======
+
+0.5.3 (2012-10-04)
+------------------
+* Remove policy from MirrorSite
+* Redirect to first enabled mirror site when package is not found locally
+
 0.5.2 (2010-10-03)
 ------------------
 * Organize code in distutils views
