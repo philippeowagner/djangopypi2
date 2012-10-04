@@ -1,4 +1,3 @@
-from urlparse import urljoin
 from django.conf import settings
 from django.db.models.query import Q
 from django.http import Http404, HttpResponseRedirect
@@ -22,27 +21,47 @@ def simple_index(request, **kwargs):
     kwargs.setdefault('template_name', 'pypi_frontend/package_list_simple.html')
     return index(request, **kwargs)
 
-def details(request, package, proxy_folder='pypi', **kwargs):
-    kwargs.setdefault('template_object_name', 'package')
-    kwargs.setdefault('queryset', Package.objects.all())
-    try:
-        return list_detail.object_detail(request, object_id=package, **kwargs)
-    except Http404, not_found:
-        for mirror_site in MirrorSite.objects.filter(enabled=True):
-            url = urljoin(mirror_site.url, package)
-            mirror_site.logs.create(action=url)
-            return HttpResponseRedirect(url)
-        raise Http404(u'%s is not a registered package' % (package,))
+def _mirror_if_not_found(proxy_folder):
+    def decorator(func):
+        def internal(request, package, **kwargs):
+            try:
+                return func(request, package, **kwargs)
+            except Http404:
+                for mirror_site in MirrorSite.objects.filter(enabled=True):
+                    url = '/'.join([mirror_site.url.rstrip('/'), proxy_folder, package])
+                    mirror_site.logs.create(action='Redirect to ' + url)
+                    return HttpResponseRedirect(url)
+            raise Http404(u'%s is not a registered package' % (package,))
+        return internal
+    return decorator
 
-def simple_details(request, package, **kwargs):
-    kwargs.setdefault('proxy_folder', 'simple')
-    kwargs.setdefault('template_name', 'pypi_frontend/package_detail_simple.html')
-    return details(request, package, **kwargs)
+@_mirror_if_not_found('pypi')
+def details(request, package):
+    return list_detail.object_detail(
+        request,
+        object_id            = package,
+        template_object_name = 'package',
+        queryset             = Package.objects.all(),
+    )
 
-def doap(request, package, **kwargs):
-    kwargs.setdefault('template_name', 'pypi_frontend/package_doap.xml')
-    kwargs.setdefault('mimetype', 'text/xml')
-    return details(request, package, **kwargs)
+@_mirror_if_not_found('simple')
+def simple_details(request, package):
+    return list_detail.object_detail(
+        request,
+        object_id     = package,
+        template_name = 'pypi_frontend/package_detail_simple.html',
+        queryset      = Package.objects.all(),
+    )
+
+@_mirror_if_not_found('pypi')
+def doap(request, package):
+    return list_detail.object_detail(
+        request,
+        object_id     = package,
+        template_name = 'pypi_frontend/package_doap.xml',
+        mimetype      = 'text/xml',
+        queryset      = Package.objects.all(),
+    )
 
 def search(request, **kwargs):
     if request.method == 'POST':

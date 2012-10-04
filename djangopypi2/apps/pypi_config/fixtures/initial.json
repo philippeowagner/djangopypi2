@@ -4,7 +4,7 @@
         "model": "pypi_config.mirrorsite",
         "fields": {
             "name": "PyPi",
-            "url": "http://pypi.python.org/pypi",
+            "url": "http://pypi.python.org/",
             "enabled": false
         }
     },

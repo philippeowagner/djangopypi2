@@ -1,6 +1,10 @@
 History
 =======
 
+0.5.3.1 (2012-10-04)
+--------------------
+* Fix mirroring not handling ``simple`` method
+
 0.5.3 (2012-10-04)
 ------------------
 * Remove policy from MirrorSite
