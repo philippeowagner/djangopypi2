@@ -4,6 +4,7 @@ History
 0.5.4 (2012-10-05)
 ------------------
 * Allow additional settings in ~/.djangopypi2/settings.py
+* Fix bug in distutils' upload causing upload to fail
 
 0.5.3.1 (2012-10-04)
 --------------------

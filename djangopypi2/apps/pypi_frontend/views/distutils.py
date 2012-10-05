@@ -110,7 +110,7 @@ def _apply_metadata(request, release):
     
     release.save()
 
-def _detect_duplicate_upload(request, release, upload):
+def _detect_duplicate_upload(request, release, uploaded):
     if any(os.path.basename(dist.content.name) == uploaded.name
            for dist in release.distributions.all()):
         raise BadRequest('That file has already been uploaded...')
@@ -158,7 +158,7 @@ def _handle_uploads(request, release):
         return 'release registered'
     
     uploaded = request.FILES.get('content')
-    _detect_duplicate_upload(request, release, upload)
+    _detect_duplicate_upload(request, release, uploaded)
 
     new_file = Distribution.objects.create(
         release    = release,
