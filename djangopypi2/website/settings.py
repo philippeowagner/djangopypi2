@@ -1,3 +1,13 @@
+#------------------------------------------------------------------------------#
+# Settings for builtin djangopypi2 site                                        #
+# -------------------------------------                                        #
+# READ BEFORE CHANGING THIS FILE:                                              #
+#                                                                              #
+# This file contains default site settings. If you want to override any        #
+# setting in this file, simply create a settings.py file in ~/.djangopypi2 .   #
+# Look at the end of this file to see what happens when you do.                #
+#------------------------------------------------------------------------------#
+
 import os
 import sys
 import errno
@@ -136,3 +146,11 @@ LOGGING = {
         },
     }
 }
+
+# Run any extra overriders the user might have (such as ADMINS or DEBUG)
+
+_extra_settings = os.path.join(PROJECT_ROOT, 'settings.py')
+if os.path.exists(_extra_settings):
+    exec file(_extra_settings)
+
+# DO NOT ADD ANYTHING BELOW THIS LINE

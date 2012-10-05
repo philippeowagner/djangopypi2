@@ -1,6 +1,10 @@
 History
 =======
 
+0.5.4 (2012-10-05)
+------------------
+* Allow additional settings in ~/.djangopypi2/settings.py
+
 0.5.3.1 (2012-10-04)
 --------------------
 * Fix mirroring not handling ``simple`` method

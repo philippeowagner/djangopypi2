@@ -57,6 +57,23 @@ configuration::
     directory = /path/to/virtualenv
     command = /path/to/virtualenv/bin/gunicorn_django djangopypi2.website.settings
 
+Configuration
+-------------
+All the data and settings of ``djangopypi2`` resides by default in a the directory
+``~/.djangopypi2``, meaning ``.djangopypi2`` inside the homedir of the user running
+the web server.
+
+You can create a file named ``settings.py`` in that directory to override any
+available Django settings, and basically you'd want to create a file like this::
+
+    # ~/.djangopypi2/settings.py
+
+    DEBUG = False                 # Control DEBUG on/off
+    TIME_ZONE = 'Your/Time/Zone'  # Just like in any Django settings.py file
+    ADMINS = (
+        ('Your name', 'your@email'),
+    )
+
 Package upload directory
 -------------------------
 Packages are uploaded to ``~/.djangopypi2/media/dists/`` by default.
