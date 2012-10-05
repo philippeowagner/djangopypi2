@@ -5,6 +5,7 @@ History
 ------------------
 * Allow additional settings in ~/.djangopypi2/settings.py
 * Fix bug in distutils' upload causing upload to fail
+* Fix bug causing uploaded files to be saved with the wrong name
 
 0.5.3.1 (2012-10-04)
 --------------------
