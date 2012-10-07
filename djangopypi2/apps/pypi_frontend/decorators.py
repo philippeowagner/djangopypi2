@@ -13,7 +13,8 @@ except ImportError:
     def available_attrs(fn):
         return tuple(a for a in WRAPPER_ASSIGNMENTS if hasattr(fn, a))
 
-from .http import HttpResponseUnauthorized, login_basic_auth
+from .http import HttpResponseUnauthorized
+from .http import login_basic_auth
 
 def basic_auth(view_func):
     """ Decorator for views that need to handle basic authentication such as

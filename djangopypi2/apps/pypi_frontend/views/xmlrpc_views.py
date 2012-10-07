@@ -2,6 +2,9 @@ import xmlrpclib
 from django.http import HttpResponseNotAllowed, HttpResponse
 from ..models import Package, Release
 
+def is_xmlrpc_request(request):
+    return (request.method == 'POST') and (request.META['CONTENT_TYPE'] == 'text/xml')
+
 class XMLRPCResponse(HttpResponse):
     """ A wrapper around the base HttpResponse that dumps the output for xmlrpc
     use """
@@ -10,7 +13,7 @@ class XMLRPCResponse(HttpResponse):
                                                              methodresponse=methodresponse),
                                              *args, **kwargs)
 
-def parse_xmlrpc_request(request):
+def handle_xmlrpc_request(request):
     """
     Parse the request and dispatch to the appropriate view
     """
