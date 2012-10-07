@@ -1,0 +1,27 @@
+{% extends 'pypi_ui/base.html' %}
+{% block title %}Package Index{% endblock %}
+{% block content %}
+<h1>Package Index</h1>
+
+<table class="table table-striped table-condensed">
+  <thead>
+    <th>Package</th>
+    <th>Latest version</th>
+    <th>Released</th>
+  </thead>
+
+  <tbody>
+    {% for package in package_list %}
+    <td>
+      <a href="{{ package.get_absolute_url }}">{{ package.name }}</a>
+    </td>
+    <td>
+      {% if package.latest %}{{ package.latest.version }}{% endif %}
+    </td>
+    <td>
+      {% if package.latest %}{{ package.latest.created }}{% endif %}
+    </td>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

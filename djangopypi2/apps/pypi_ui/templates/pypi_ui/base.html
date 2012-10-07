@@ -3,7 +3,7 @@
 
 <html>
   <head>
-    <title>{% block title %}DjangoPypi{% endblock %}</title>
+    <title>{% block title %}Django PyPi{% endblock %}</title>
     <link href="{% static "bootstrap/css/bootstrap.min.css" %}" rel="stylesheet" />
     <script src="http://code.jquery.com/jquery-latest.js"></script>
     <script src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
@@ -15,7 +15,10 @@
     <div class="navbar">
       <div class="navbar-inner">
         <div class="container pull-left">
-          <a class="brand" href="/">Django PYPI</a>
+          <a class="brand" href="/">Django PyPi</a>
+          <ul class="nav">
+            <li class="active"><a href="/">Packages</a></li>
+          </ul>
         </div>
         <p class="navbar-text pull-right">
           {% if request.user.is_authenticated %}

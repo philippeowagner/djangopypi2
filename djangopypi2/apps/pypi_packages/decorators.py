@@ -13,28 +13,6 @@ except ImportError:
     def available_attrs(fn):
         return tuple(a for a in WRAPPER_ASSIGNMENTS if hasattr(fn, a))
 
-from .http import HttpResponseUnauthorized
-from .http import login_basic_auth
-
-def basic_auth(view_func):
-    """ Decorator for views that need to handle basic authentication such as
-    distutils views. """
-
-    def _wrapped_view(request, *args, **kwargs):
-        if request.user.is_authenticated():
-            return view_func(request, *args, **kwargs)
-        user = login_basic_auth(request)
-
-        if not user:
-            return HttpResponseUnauthorized('pypi')
-
-        login(request, user)
-        if not request.user.is_authenticated():
-            return HttpResponseForbidden("Not logged in, or invalid username/"
-                                         "password.")
-        return view_func(request, *args, **kwargs)
-    return wraps(view_func, assigned=available_attrs(view_func))(_wrapped_view)
-
 def user_owns_package(login_url=None, redirect_field_name=REDIRECT_FIELD_NAME):
     """
     Decorator for views that checks whether the user owns the currently requested
@@ -45,9 +23,9 @@ def user_owns_package(login_url=None, redirect_field_name=REDIRECT_FIELD_NAME):
         login_url = settings.LOGIN_URL
     
     def decorator(view_func):
-        def _wrapped_view(request, package, *args, **kwargs):
-            if request.user.packages_owned.filter(name=package).count() > 0:
-                return view_func(request, package=package, *args, **kwargs)
+        def _wrapped_view(request, package_name, *args, **kwargs):
+            if request.user.packages_owned.filter(name=package_name).count() > 0:
+                return view_func(request, package_name=package_name, *args, **kwargs)
 
             path = urlquote(request.get_full_path())
             tup = login_url, redirect_field_name, path
@@ -65,11 +43,11 @@ def user_maintains_package(login_url=None, redirect_field_name=REDIRECT_FIELD_NA
         login_url = settings.LOGIN_URL
 
     def decorator(view_func):
-        def _wrapped_view(request, package, *args, **kwargs):
+        def _wrapped_view(request, package_name, *args, **kwargs):
             if (request.user.is_authenticated() and
-                (request.user.packages_owned.filter(name=package).count() > 0 or
-                 request.user.packages_maintained.filter(name=package).count() > 0)):
-                return view_func(request, package=package, *args, **kwargs)
+                (request.user.packages_owned.filter(name=package_name).count() > 0 or
+                 request.user.packages_maintained.filter(name=package_name).count() > 0)):
+                return view_func(request, package_name=package_name, *args, **kwargs)
 
             path = urlquote(request.get_full_path())
             tup = login_url, redirect_field_name, path

@@ -4,7 +4,7 @@
 {% block title %}{{ release }}{% endblock %}
 {% block extra_head %}
 <link rel="meta" title="DOAP" type="application/rdf+xml"
-      href="{% url djangopypi2-release-doap package=release.package.name version=release.version %}">
+      href="{% url djangopypi2-pypi-release-doap package_name=release.package.name version=release.version %}">
 {% endblock %}
 
 {% block content %}
@@ -21,8 +21,12 @@
 
 <div class="row">
   <span class="span8">
-    <div class="well">
+    <div class="well well-small">
+      {% if release.description %}
       {{ release.description|saferst }}
+      {% else %}
+      <i>This package has no description</i>
+      {% endif %}
     </div>
   </span>
 

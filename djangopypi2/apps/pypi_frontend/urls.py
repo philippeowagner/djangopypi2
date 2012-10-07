@@ -1,34 +1,17 @@
-# -*- coding: utf-8 -*-
 from django.conf.urls.defaults import patterns, url
-from .feeds import ReleaseFeed
-from .views import root as root_views
-from .views import packages as packages_views
-from .views import releases as releases_views
+from . import views
 
-PACKAGE = r'(?P<package>[\w\d_\.\-]+)'
-VERSION = PACKAGE + r'/(?P<version>[\w\d_\.\-]+)'
+PACKAGE = r'(?P<package_name>[\w\d_\.\-]+)'
+VERSION = r'(?P<version>[\w\d_\.\-]+)'
 
 urlpatterns = patterns('',
-    url('^$', root_views.root, name="djangopypi2-root"),
+    url('^$', views.index, name="djangopypi2-root"),
 
-    url('^packages/$', packages_views.index, name='djangopypi2-package-index'),
-    url('^search/$', packages_views.search,name='djangopypi2-search'),
-    url('^rss/$', ReleaseFeed(), name='djangopypi2-rss'),
+    url('^simple/$'                , views.simple_index   , name='djangopypi2-simple-index'),
+    url('^simple/' + PACKAGE + '/$', views.simple_details , name='djangopypi2-simple-package-info'),
 
-    url('^simple/$', packages_views.simple_index, name='djangopypi2-package-index-simple'),
-    url('^simple/' + PACKAGE + '/$', packages_views.simple_details, name='djangopypi2-package-simple'),
-
-    url('^pypi/$', root_views.root, name='djangopypi2-release-index'),
-    url('^pypi/' + PACKAGE + '/$', packages_views.details, name='djangopypi2-package'),
-    url('^pypi/' + PACKAGE + '/rss/$', ReleaseFeed(), name='djangopypi2-package-rss'),
-    url('^pypi/' + PACKAGE + r'/doap\.rdf$', packages_views.doap, name='djangopypi2-package-doap'),
-    url('^pypi/' + PACKAGE + '/manage/$', packages_views.manage, name='djangopypi2-package-manage'),
-    url('^pypi/' + PACKAGE + '/manage/versions/$', packages_views.manage_versions, name='djangopypi2-package-manage-versions'),
-
-    url('^pypi/' + VERSION + '/$', releases_views.details, name='djangopypi2-release'),
-    url('^pypi/' + VERSION + r'/doap\.rdf$', releases_views.doap, name='djangopypi2-release-doap'),
-    url('^pypi/' + VERSION + '/manage/$', releases_views.manage, name='djangopypi2-release-manage'),
-    url('^pypi/' + VERSION + '/metadata/$', releases_views.manage_metadata, name='djangopypi2-release-manage-metadata'),
-    url('^pypi/' + VERSION + '/files/$', releases_views.manage_files, name='djangopypi2-release-manage-files'),
-    url('^pypi/' + VERSION + '/files/upload/$', releases_views.upload_file, name='djangopypi2-release-upload-file'),
+    url('^pypi/$'                                          , views.index          , name='djangopypi2-pypi-index'),
+    url('^pypi/' + PACKAGE + '/$'                          , views.package_details, name='djangopypi2-pypi-package'),
+    url('^pypi/' + PACKAGE + r'/doap\.rdf$'                , views.package_doap   , name='djangopypi2-pypi-package-doap'),
+    url('^pypi/' + PACKAGE + '/' + VERSION + r'/doap\.rdf$', views.release_doap   , name='djangopypi2-pypi-release-doap'),
 )

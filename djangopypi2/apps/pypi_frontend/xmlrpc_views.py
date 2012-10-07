@@ -1,6 +1,7 @@
 import xmlrpclib
 from django.http import HttpResponseNotAllowed, HttpResponse
-from ..models import Package, Release
+from ..pypi_packages.models import Package
+from ..pypi_packages.models import Release
 
 def is_xmlrpc_request(request):
     return (request.method == 'POST') and (request.META['CONTENT_TYPE'] == 'text/xml')

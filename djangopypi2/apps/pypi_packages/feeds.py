@@ -17,7 +17,8 @@ except ImportError:
             feedgen.write(response, 'utf-8')
             return response
 
-from .models import Package, Release
+from .models import Package
+from .models import Release
 
 class ReleaseFeed(Feed):
     """ A feed of releases either for the site in general or for a specific 

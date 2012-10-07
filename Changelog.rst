@@ -4,6 +4,9 @@ History
 ------------------
 * New pypi_metadata app, holds only package metadata
 * /simple/ interface is case insensitive
+* New pypi_packages app, split out of pypi_frontend, doing only package management
+* From now on pypi_frontend only implements scripting interfaces (xmlrpc, distutils, doap)
+* Removed pypi_config app
 
 0.5.4 (2012-10-05)
 ------------------

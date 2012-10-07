@@ -2,24 +2,21 @@ import os
 import re
 import itertools
 from logging import getLogger
-
 from django.conf import settings
 from django.db import transaction
 from django.http import *
 from django.utils.translation import ugettext_lazy as _
 from django.utils.datastructures import MultiValueDict
-from django.contrib.auth import login
-
-from ...pypi_metadata.models import Classifier
-from ...pypi_metadata.models import DistributionType
-from ...pypi_metadata.models import PythonVersion
-from ...pypi_metadata.models import PlatformName
-from ...pypi_metadata.definitions import METADATA_VERSIONS
-from ..decorators import basic_auth
-from ..forms import PackageForm, ReleaseForm
-from ..models import Package
-from ..models import Release
-from ..models import Distribution
+from ..pypi_metadata.models import Classifier
+from ..pypi_metadata.models import DistributionType
+from ..pypi_metadata.models import PythonVersion
+from ..pypi_metadata.models import PlatformName
+from ..pypi_metadata.definitions import METADATA_VERSIONS
+from ..pypi_packages.models import Package
+from ..pypi_packages.models import Release
+from ..pypi_packages.models import Distribution
+from ..pypi_packages.forms import PackageForm, ReleaseForm
+from .basic_auth import basic_auth
 
 log = getLogger(__name__)
 
