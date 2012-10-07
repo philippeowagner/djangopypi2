@@ -9,13 +9,7 @@ from django.template import RequestContext
 from ..decorators import user_owns_package, user_maintains_package
 from ..models import Package, Release, Distribution
 from ..forms import ReleaseForm, DistributionUploadForm
-from ..metadata_forms import Metadata10Form, Metadata11Form, Metadata12Form
-
-METADATA_FORMS = {
-    '1.0': Metadata10Form,
-    '1.1': Metadata11Form,
-    '1.2': Metadata12Form,
-}
+from ...pypi_metadata.forms import METADATA_FORMS
 
 def index(request, **kwargs):
     kwargs.setdefault('template_object_name','release')

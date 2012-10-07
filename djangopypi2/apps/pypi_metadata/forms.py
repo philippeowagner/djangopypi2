@@ -1,11 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from ..pypi_metadata.models import Classifier
-
-metadata10licenses = ('Artistic', 'BSD', 'DFSG', 'GNU GPL', 'GNU LGPL',
-                     'MIT', 'Mozilla PL', 'public domain', 'Python',
-                     'Qt', 'PL', 'Zope PL', 'unknown', 'nocommercial', 'nosell', 
-                     'nosource', 'shareware', 'other')
+from .definitions import METADATA_LICENSES
+from .models import Classifier
 
 class LinesField(forms.CharField):
     def __init__(self, *args, **kwargs):
@@ -61,8 +57,8 @@ class Metadata10Form(forms.Form):
                               help_text=_(u'A string selected from a short list '
                                           'of choices, specifying the license '
                                           'covering the package.'),
-                              widget=forms.Select(choices=(zip(metadata10licenses,
-                                                               metadata10licenses))))
+                              widget=forms.Select(choices=(zip(METADATA_LICENSES,
+                                                               METADATA_LICENSES))))
     
 class Metadata11Form(Metadata10Form):
     supported_platform = forms.CharField(required=False, widget=forms.Textarea(),
@@ -191,3 +187,9 @@ class Metadata12Form(Metadata10Form):
                                               'and a label for it, separated '
                                               'by a comma: "Bug Tracker, '
                                               'http://bugs.project.com"'))
+
+METADATA_FORMS = {
+    '1.0': Metadata10Form,
+    '1.1': Metadata11Form,
+    '1.2': Metadata12Form,
+}

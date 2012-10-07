@@ -14,7 +14,7 @@ from ...pypi_metadata.models import Classifier
 from ...pypi_metadata.models import DistributionType
 from ...pypi_metadata.models import PythonVersion
 from ...pypi_metadata.models import PlatformName
-from ..metadata import METADATA_FIELDS
+from ...pypi_metadata.definitions import METADATA_VERSIONS
 from ..decorators import basic_auth
 from ..forms import PackageForm, ReleaseForm
 from ..models import Package
@@ -87,8 +87,8 @@ def _get_release(request, package):
 
 def _apply_metadata(request, release):
     metadata_version = request.POST.get('metadata_version', '').strip()
-    if not metadata_version in METADATA_FIELDS:
-        raise BadRequest('Metadata version must be present and one of: %s' % (', '.join(METADATA_FIELDS.keys()), ))
+    if not metadata_version in METADATA_VERSIONS:
+        raise BadRequest('Metadata version must be present and one of: %s' % (', '.join(METADATA_VERSIONS.keys()), ))
 
     if (('classifiers' in request.POST or 'download_url' in request.POST) and 
         metadata_version == '1.0'):
@@ -96,7 +96,7 @@ def _apply_metadata(request, release):
     
     release.metadata_version = metadata_version
     
-    fields = METADATA_FIELDS[metadata_version]
+    fields = METADATA_VERSIONS[metadata_version]
     
     if 'classifiers' in request.POST:
         request.POST.setlist('classifier',request.POST.getlist('classifiers'))

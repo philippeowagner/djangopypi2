@@ -3,7 +3,7 @@ from os.path import basename
 from django import forms
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
-from .metadata import METADATA_FIELDS
+from ..pypi_metadata.definitions import METADATA_VERSIONS
 from .models import Package, Release, Distribution
 
 log = logging.getLogger(__name__)
@@ -41,8 +41,8 @@ class DistributionUploadForm(forms.ModelForm):
                                     'version.')
 
 class ReleaseForm(forms.ModelForm):
-    metadata_version = forms.CharField(widget=forms.Select(choices=zip(METADATA_FIELDS.keys(),
-                                                                       METADATA_FIELDS.keys())))
+    metadata_version = forms.CharField(widget=forms.Select(choices=zip(METADATA_VERSIONS.keys(),
+                                                                       METADATA_VERSIONS.keys())))
     
     class Meta:
         model = Release
