@@ -1,10 +1,12 @@
 from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.db.models.query import Q
 from django.http import Http404, HttpResponseRedirect
 from django.forms.models import inlineformset_factory
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
-from django.views.generic import list_detail, create_update
+from django.views.generic import list_detail
+from django.views.generic import create_update
 from ...pypi_config.models import MirrorSite
 from ..decorators import user_owns_package, user_maintains_package
 from ..models import Package
@@ -19,7 +21,8 @@ def index(request, **kwargs):
 
 def simple_index(request, **kwargs):
     kwargs.setdefault('template_name', 'pypi_frontend/package_list_simple.html')
-    return index(request, **kwargs)
+    kwargs.setdefault('queryset', Package.objects.all())
+    return list_detail.object_list(request, **kwargs)
 
 def _mirror_if_not_found(proxy_folder):
     def decorator(func):
@@ -46,12 +49,19 @@ def details(request, package):
 
 @_mirror_if_not_found('simple')
 def simple_details(request, package):
-    return list_detail.object_detail(
-        request,
-        object_id     = package,
-        template_name = 'pypi_frontend/package_detail_simple.html',
-        queryset      = Package.objects.all(),
-    )
+    # Find the package
+    try:
+        obj = Package.objects.get(name__iexact=package)
+    except Package.DoesNotExist:
+        # If the package is not found, let the mirror handle it
+        raise Http404()
+    # If the package we found is not exactly the same as the name the user typed, redirect
+    # to the proper url:
+    if obj.name != package:
+        return HttpResponseRedirect(reverse('djangopypi2-package-simple', kwargs=dict(package=obj.name)))
+    return render_to_response('pypi_frontend/package_detail_simple.html',
+                              context_instance=RequestContext(request, dict(package=obj)),
+                              mimetype='text/html')
 
 @_mirror_if_not_found('pypi')
 def doap(request, package):

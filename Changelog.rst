@@ -3,6 +3,7 @@ History
 0.5.5 (2012-10-07)
 ------------------
 * New pypi_metadata app, holds only package metadata
+* /simple/ interface is case insensitive
 
 0.5.4 (2012-10-05)
 ------------------
