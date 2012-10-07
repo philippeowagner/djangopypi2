@@ -6,9 +6,9 @@ from django.utils import simplejson as json
 from django.utils.datastructures import MultiValueDict
 from django.contrib.auth.models import User
 from ..pypi_config.models import GlobalConfiguration
-from ..pypi_config.models import DistributionType
-from ..pypi_config.models import PythonVersion
-from ..pypi_config.models import PlatformName
+from ..pypi_metadata.models import DistributionType
+from ..pypi_metadata.models import PythonVersion
+from ..pypi_metadata.models import PlatformName
 
 class PackageInfoField(models.Field):
     description = u'Python Package Information Field'

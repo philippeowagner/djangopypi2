@@ -10,10 +10,10 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.datastructures import MultiValueDict
 from django.contrib.auth import login
 
-from ...pypi_config.models import Classifier
-from ...pypi_config.models import DistributionType
-from ...pypi_config.models import PythonVersion
-from ...pypi_config.models import PlatformName
+from ...pypi_metadata.models import Classifier
+from ...pypi_metadata.models import DistributionType
+from ...pypi_metadata.models import PythonVersion
+from ...pypi_metadata.models import PlatformName
 from ..metadata import METADATA_FIELDS
 from ..decorators import basic_auth
 from ..forms import PackageForm, ReleaseForm

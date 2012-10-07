@@ -120,6 +120,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'djangopypi2.apps.pypi_ui',
     'djangopypi2.apps.pypi_config',
+    'djangopypi2.apps.pypi_metadata',
     'djangopypi2.apps.pypi_frontend',
 )
 
