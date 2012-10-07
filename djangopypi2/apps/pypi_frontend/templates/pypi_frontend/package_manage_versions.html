@@ -1,6 +1,6 @@
 {% extends 'pypi_ui/base.html' %}
 {% block title %}Manage {{ package.name }} Versions{% endblock %}
-{% block body %}
+{% block content %}
 <h1>Manage {{ package.name }} Versions</h1>
 <form action="" method="post">
 {% csrf_token %}
