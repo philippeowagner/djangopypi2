@@ -38,32 +38,43 @@ def register_or_upload(request):
         response = _handle_uploads(request, release)
     except BadRequest, error:
         transaction.rollback()
-        return HttpResponseBadRequest(str(error))
+        return HttpResponseBadRequest(str(error), 'text/plain')
     except Forbidden, error:
         transaction.rollback()
-        return HttpResponseForbidden(str(error))
+        return HttpResponseForbidden(str(error), 'text/plain')
     except Exception, error:
         transaction.rollback()
         raise
 
     transaction.commit()
-    return HttpResponse(response)
+    return HttpResponse(response, 'text/plain')
 
 def _verify_post_request(request):
     if request.method != 'POST':
         raise BadRequest('Only post requests are supported')
 
+def _create_new_package(request, name):
+    if Package.objects.filter(name__iexact=name).count():
+        raise BadRequest('The package %r already exists' % (name, ))
+
+    package = Package.objects.create(name=name)
+
+    package.owners.add(request.user)
+    package.maintainers.add(request.user)
+    package.save()
+
+    return package
+
 def _get_package(request):
     name = request.POST.get('name',None).strip()
-    
+
     if not name:
         raise BadRequest('No package name specified')
 
-    package, created = Package.objects.get_or_create(name=name)
-    if created:
-        package.owners.add(request.user)
-        package.maintainers.add(request.user)
-        package.save()
+    try:
+        package = Package.objects.get(name=name)
+    except Package.DoesNotExist:
+        package = _create_new_package(request, name)
 
     return package
 
