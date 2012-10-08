@@ -9,6 +9,7 @@ History
 * Removed pypi_config app
 * Add missing TEMPLATE_CONTEXT_PROCESSORS to website.settings
 * Add pypi_users for showing user profiles
+* Add Shpinx docs
 
 0.5.4 (2012-10-05)
 ------------------

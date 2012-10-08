@@ -11,7 +11,7 @@ setup(
     name='djangopypi2',
     version=version,
     description="A Django application that emulates the Python Package Index.",
-    long_description=fread("README.rst")+"\n\n"+fread('Changelog.rst')+"\n\n"+fread('AUTHORS.rst'),
+    long_description=fread("README.rst"),
     keywords='django pypi packaging index',
     author='Ask Solem',
     author_email='askh@opera.com',
