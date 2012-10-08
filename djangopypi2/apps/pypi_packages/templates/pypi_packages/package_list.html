@@ -12,15 +12,17 @@
 
   <tbody>
     {% for package in package_list %}
-    <td>
-      <a href="{{ package.get_absolute_url }}">{{ package.name }}</a>
-    </td>
-    <td>
-      {% if package.latest %}{{ package.latest.version }}{% endif %}
-    </td>
-    <td>
-      {% if package.latest %}{{ package.latest.created|timesince }} ago{% endif %}
-    </td>
+    <tr>
+      <td>
+        <a href="{{ package.get_absolute_url }}">{{ package.name }}</a>
+      </td>
+      <td>
+        {% if package.latest %}{{ package.latest.version }}{% endif %}
+      </td>
+      <td>
+        {% if package.latest %}{{ package.latest.created|timesince }} ago{% endif %}
+      </td>
+    </tr>
     {% endfor %}
   </tbody>
 </table>
