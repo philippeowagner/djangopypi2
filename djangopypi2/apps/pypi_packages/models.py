@@ -162,7 +162,8 @@ class Distribution(models.Model):
     comment = models.CharField(max_length=255, blank=True)
     signature = models.TextField(blank=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
-    uploader = models.ForeignKey(User, editable=False, blank=True, null=True)
+    uploader = models.ForeignKey(User, related_name='distributions_uploaded',
+                                 editable=False, blank=True, null=True)
 
     @property
     def filename(self):

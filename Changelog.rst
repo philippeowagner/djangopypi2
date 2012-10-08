@@ -1,12 +1,14 @@
 History
 =======
-0.5.5 (2012-10-07)
+0.5.5 (2012-10-08)
 ------------------
 * New pypi_metadata app, holds only package metadata
 * /simple/ interface is case insensitive
 * New pypi_packages app, split out of pypi_frontend, doing only package management
 * From now on pypi_frontend only implements scripting interfaces (xmlrpc, distutils, doap)
 * Removed pypi_config app
+* Add missing TEMPLATE_CONTEXT_PROCESSORS to website.settings
+* Add pypi_users for showing user profiles
 
 0.5.4 (2012-10-05)
 ------------------
