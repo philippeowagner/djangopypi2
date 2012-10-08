@@ -17,7 +17,8 @@
         <div class="container pull-left">
           <a class="brand" href="/">Django PyPi</a>
           <ul class="nav">
-            <li class="active"><a href="/">Packages</a></li>
+            <li {% block packages_section %}{% endblock %}><a href="/packages/">Packages</a></li>
+            <li {% block users_section %}{% endblock %}><a href="/users/">Users</a></li>
           </ul>
         </div>
         <ul class="nav pull-right">
