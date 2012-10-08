@@ -1,5 +1,6 @@
 {% extends 'pypi_packages/base.html' %}
 {% load safemarkup %}
+{% load static %}
 
 {% block title %}{{ release }}{% endblock %}
 {% block extra_head %}
@@ -8,7 +9,10 @@
 {% endblock %}
 
 {% block content %}
-<h1>{{ release }}</h1>
+<h1>
+  {{ release }}
+  <a href="{% url djangopypi2-pypi-release-doap package_name=release.package.name version=release.version %}"><img src="{% static "img/xml-icon.svg" %}"></a>
+</h1>
 <p class="lead">{{ release.summary }}</p>
 
 {% ifnotequal release release.package.latest %}

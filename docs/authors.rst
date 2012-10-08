@@ -36,4 +36,4 @@ Twitter Bootstrap graphics ships with Glyphicons: http://glyphicons.com/
 
 Favicon taken from http://pypi.python.org/favicon.ico
 
-RSS icon taken from Wikipedia.
+RSS and XML icons taken from Wikipedia.

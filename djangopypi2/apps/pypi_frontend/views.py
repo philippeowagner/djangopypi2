@@ -7,6 +7,7 @@ from django.template import RequestContext
 from django.views.generic import list_detail
 from ..pypi_ui.shortcuts import render_to_response
 from ..pypi_packages.models import Package
+from ..pypi_packages.models import Release
 from .models import MirrorSite
 from . import xmlrpc_views
 from . import distutils_request
@@ -47,12 +48,7 @@ def _mirror_if_not_found(proxy_folder):
 
 @_mirror_if_not_found('simple')
 def simple_details(request, package_name):
-    # Find the package
-    try:
-        package = Package.objects.get(name__iexact=package_name)
-    except Package.DoesNotExist:
-        # If the package is not found, let the mirror handle it
-        raise Http404()
+    package = get_object_or_404(Package, name__iexact=package_name)
     # If the package we found is not exactly the same as the name the user typed, redirect
     # to the proper url:
     if package.name != package_name:
@@ -68,21 +64,13 @@ def package_details(request, package_name):
 
 @_mirror_if_not_found('pypi')
 def package_doap(request, package_name):
-    return list_detail.object_detail(
-        request,
-        object_id     = package_name,
-        template_name = 'pypi_frontend/package_doap.xml',
-        mimetype      = 'text/xml',
-        queryset      = Package.objects.all(),
-    )
+    package = get_object_or_404(Package, name=package_name)
+    return render_to_response('pypi_frontend/package_doap.xml',
+                              context_instance=RequestContext(request, dict(package=package)),
+                              mimetype='text/xml')
 
 def release_doap(request, package_name, version):
-    release = get_object_or_404(Package, name=package_name).get_release(version)
-    
-    if not release:
-        raise Http404('Version %s does not exist for %s' % (version, package_name))
-    return render_to_response(
-        'pypi_frontend/release_doap.xml',
-        dict(template_object_name=release),
-        context_instance=RequestContext(request),
-        mimetype='text/xml')
+    release = get_object_or_404(Release, package__name=package_name, version=version)
+    return render_to_response('pypi_frontend/release_doap.xml',
+                              context_instance=RequestContext(request, dict(release=release)),
+                              mimetype='text/xml')

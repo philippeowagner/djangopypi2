@@ -1,5 +1,9 @@
 History
 =======
+0.5.6 (2012-10-10)
+------------------
+* Fix DOAP views and add links to them from package and release views
+
 0.5.5 (2012-10-08)
 ------------------
 * New pypi_metadata app, holds only package metadata
