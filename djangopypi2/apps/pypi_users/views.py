@@ -3,9 +3,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.views.generic import list_detail
 from django.shortcuts import get_object_or_404
-from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
+from ..pypi_ui.shortcuts import render_to_response
 
 @login_required
 def index(request):

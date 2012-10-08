@@ -4,10 +4,10 @@ from django.db.models.query import Q
 from django.http import Http404, HttpResponseRedirect
 from django.forms.models import inlineformset_factory
 from django.shortcuts import get_object_or_404
-from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views.generic import list_detail
 from django.views.generic import create_update
+from ..pypi_ui.shortcuts import render_to_response
 from .decorators import user_owns_package
 from .decorators import user_maintains_package
 from .models import Package

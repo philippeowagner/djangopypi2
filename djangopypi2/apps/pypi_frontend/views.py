@@ -3,9 +3,9 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
-from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views.generic import list_detail
+from ..pypi_ui.shortcuts import render_to_response
 from ..pypi_packages.models import Package
 from .models import MirrorSite
 from . import xmlrpc_views
