@@ -22,7 +22,7 @@ def ensure_directory(path):
 
 PROJECT_ROOT = ensure_directory(os.path.expanduser('~/.djangopypi2'))
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -129,6 +129,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'djangopypi2.apps.pypi_ui',
     'djangopypi2.apps.pypi_users',
+    'djangopypi2.apps.pypi_manage',
     'djangopypi2.apps.pypi_metadata',
     'djangopypi2.apps.pypi_packages',
     'djangopypi2.apps.pypi_frontend',
