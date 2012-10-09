@@ -5,11 +5,9 @@ from setuptools import setup, find_packages
 def fread(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
-version = '0.5.6'
-
 setup(
     name='djangopypi2',
-    version=version,
+    version=fread('VERSION').strip(),
     description="A Django application that emulates the Python Package Index.",
     long_description=fread("README.rst"),
     keywords='django pypi packaging index',
