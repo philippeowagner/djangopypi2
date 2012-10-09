@@ -6,7 +6,7 @@ Using Twitter Bootstrap for UI, forked from the original DjangoPyPi project,
 DjangoPyPi2 provides an easy to use and manage interface.
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    djangopypi_compatibility
    install
