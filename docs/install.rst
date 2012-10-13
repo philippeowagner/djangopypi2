@@ -45,16 +45,22 @@ All the data and settings of ``djangopypi2`` resides by default in a the directo
 ``~/.djangopypi2``, meaning ``.djangopypi2`` inside the homedir of the user running
 the web server.
 
-You can create a file named ``settings.py`` in that directory to override any
-available Django settings, and basically you'd want to create a file like this::
+After first running ``djangopypi2``, a file called ``settings.json`` will be created
+in the ``~/.djangopypi2`` directory::
 
-    # ~/.djangopypi2/settings.py
+    {
+        "DEBUG": true,
+        "ADMINS": [],
+        "LANGUAGE_CODE": "en-us",
+        "TIME_ZONE": "America/Chicago",
+        "WEB_ROOT": "/"
+    }
 
-    DEBUG = False                 # Control DEBUG on/off
-    TIME_ZONE = 'Your/Time/Zone'  # Just like in any Django settings.py file
-    ADMINS = (
-        ('Your name', 'your@email'),
-    )
+The ``DEBUG``, ``ADMINS``, ``LANGUAGE_CODE`` and ``TIME_ZONE`` are exactly the same
+as in any Django ``settings.py`` file.
+
+The ``WEB_ROOT`` setting allows for reverse proxy support. By specifying any other
+root than ``/`` you can move the entire site to be served on a different web root.
 
 Package upload directory
 -------------------------
