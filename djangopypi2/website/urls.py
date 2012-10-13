@@ -19,9 +19,12 @@ def static_urls():
         return patterns('')
     return patterns('',
                     url(r'^' + settings.STATIC_URL.strip('/') + r'/(?P<path>.*)$',
-                        static_serve, dict(document_root=settings.STATIC_ROOT)))
+                        static_serve, dict(document_root=settings.STATIC_ROOT)),
+                    url(r'^' + settings.MEDIA_URL.strip('/') + r'/(?P<path>.*)$',
+                        static_serve, dict(document_root=settings.MEDIA_ROOT)),
+                    )
 
 urlpatterns = patterns('',
-    url(r'', include('djangopypi2.urls')),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^' + (settings.USER_SETTINGS['WEB_ROOT'].strip('/') + r'/'      ).lstrip('/'), include('djangopypi2.urls')),
+    url(r'^' + (settings.USER_SETTINGS['WEB_ROOT'].strip('/') + r'/admin/').lstrip('/'), include(admin.site.urls)),
 ) + static_urls()
