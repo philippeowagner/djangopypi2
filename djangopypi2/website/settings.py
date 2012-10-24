@@ -11,7 +11,19 @@ def ensure_directory(path):
             raise
     return path
 
-PROJECT_ROOT = ensure_directory(os.path.expanduser('~/.djangopypi2'))
+def find_project_root():
+    '''Finds the project root, where uploaded packages are kept and where the user
+    can save the settings.json file.
+    The default is ~/.djangopypi2, but it can be overridden with the DJANGOPYPI2_ROOT
+    environment variable.
+    '''
+    project_root = os.environ.get('DJANGOPYPI2_ROOT', None)
+    if project_root is None:
+        user = os.environ.get('USER', '')
+        project_root = os.path.expanduser('~{user}/.djangopypi2'.format(user=user))
+    return ensure_directory(project_root)
+
+PROJECT_ROOT = find_project_root()
 USER_SETTINGS_FILE = os.path.join(PROJECT_ROOT, 'settings.json')
 
 USER_SETTINGS_DEFAULTS = dict(

@@ -16,12 +16,27 @@ The most simple way to install ``djangopypi2`` is by::
     $ source pypi-site/bin/activate
     $ pip install django gunicorn djangopypi2
 
-    # Configure our installation (all data is kept in ~/.djangopypi2)
+    # Configure our installation
     $ manage-pypi-site syncdb
     $ manage-pypi-site collectstatic
     $ manage-pypi-site loaddata initial
 
 That's it, we're now ready to run our server
+
+Where data is kept
+------------------
+By default ``djangopypi2`` installs and runs from ``~/.djangopypi2``, meaning
+the ``.djangopypi2`` directory inside the homedir of the user running the web
+server.
+
+This can be overridden by setting the ``DJANGOPYPI2_ROOT`` environment variable.
+
+For example, to install with a specific ``PROJECT_ROOT`` /etc/djangopypi2::
+
+    # Configure our installation
+    $ DJANGOPYPI2_ROOT=/etc/djangopypi2 manage-pypi-site syncdb
+    $ DJANGOPYPI2_ROOT=/etc/djangopypi2 manage-pypi-site collectstatic
+    $ DJANGOPYPI2_ROOT=/etc/djangopypi2 manage-pypi-site loaddata initial
 
 Running
 -------
@@ -32,21 +47,19 @@ It's easiest to see our server running by executing::
 Then surfing to http://localhost:8000/ .
 
 For a permanent setup, simply create a ``supervisor <http://supervisord.org/>``
-configuration::
+configuration (you can omit the ``environment`` setting if you didn't specify a
+different project root)::
 
     [program:djangopypi2]
     user = www-data
     directory = /path/to/virtualenv
     command = /path/to/virtualenv/bin/gunicorn_django djangopypi2.website.settings
+    environment = DJANGOPYPI2_ROOT=/path/to/djangopypi2
 
 Configuration
 -------------
-All the data and settings of ``djangopypi2`` resides by default in a the directory
-``~/.djangopypi2``, meaning ``.djangopypi2`` inside the homedir of the user running
-the web server.
-
-After first running ``djangopypi2``, a file called ``settings.json`` will be created
-in the ``~/.djangopypi2`` directory::
+When first running ``djangopypi2``, a file called ``settings.json`` will be created
+in the ``PROJECT_ROOT`` directory::
 
     {
         "DEBUG": true,
@@ -64,7 +77,7 @@ root than ``/`` you can move the entire site to be served on a different web roo
 
 Package upload directory
 -------------------------
-Packages are uploaded to ``~/.djangopypi2/media/dists/`` by default.
+Packages are uploaded to ``PROJECT_ROOT/media/dists/`` by default.
 
 You can change this setting by setting up a Django project with more specific
 settings, or have a look at the admin interface's ``Global Configuration``

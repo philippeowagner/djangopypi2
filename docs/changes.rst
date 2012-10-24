@@ -1,5 +1,10 @@
 History
 =======
+0.5.6.1 (2012-10-23)
+--------------------
+* Fix ~/.djangopypi2 to expand according to os.environ['USER'] (thanks davedash)
+* Support for DJANGOPYPI2_ROOT environment variable, for explicit project root
+
 0.5.6 (2012-10-10)
 ------------------
 * Fix DOAP views and add links to them from package and release views
