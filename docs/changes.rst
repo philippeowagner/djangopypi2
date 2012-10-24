@@ -1,5 +1,9 @@
 History
 =======
+0.5.7 (2012-10-24)
+------------------
+* Fix broken ``admin`` link
+
 0.5.6.1 (2012-10-23)
 --------------------
 * Fix ~/.djangopypi2 to expand according to os.environ['USER'] (thanks davedash)
