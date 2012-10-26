@@ -1,7 +1,7 @@
 import os
 import sys
-import json
 import errno
+from . import user_settings
 
 def ensure_directory(path):
     try:
@@ -24,22 +24,7 @@ def find_project_root():
     return ensure_directory(project_root)
 
 PROJECT_ROOT = find_project_root()
-USER_SETTINGS_FILE = os.path.join(PROJECT_ROOT, 'settings.json')
-
-USER_SETTINGS_DEFAULTS = dict(
-    ADMINS        = [],
-    DEBUG         = False,
-    TIME_ZONE     = 'America/Chicago',
-    WEB_ROOT      = '/',
-    LANGUAGE_CODE = 'en-us',
-)
-
-if not os.path.exists(USER_SETTINGS_FILE):
-    user_settings_file = open(USER_SETTINGS_FILE, 'w')
-    user_settings_file.write(json.dumps(USER_SETTINGS_DEFAULTS, indent=4))
-    user_settings_file.close()
-
-USER_SETTINGS = json.loads(open(USER_SETTINGS_FILE, 'r').read())
+USER_SETTINGS = user_settings.load(PROJECT_ROOT)
 
 DEBUG = USER_SETTINGS['DEBUG']
 TEMPLATE_DEBUG = DEBUG
