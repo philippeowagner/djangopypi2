@@ -51,7 +51,7 @@ def simple_details(request, package_name):
     try:
         package = Package.objects.get(name__iexact=package_name)
     except Package.DoesNotExist:
-        package = get_object_or_404(Package, name__iexact=package_name.replace('-', '_'))
+        package = get_object_or_404(Package, name__iexact=package_name.replace('_', '-'))
     # If the package we found is not exactly the same as the name the user typed, redirect
     # to the proper url:
     if package.name != package_name:
