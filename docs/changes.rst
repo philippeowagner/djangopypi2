@@ -1,6 +1,6 @@
 History
 =======
-0.5.7 (?)
+0.5.7 (2012-11-15)
 ------------------
 * Fix broken ``admin`` link
 * When a package name contains a '-' sign, try to redirect to an equivalent one with '_' in the name if it's not found
