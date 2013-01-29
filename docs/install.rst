@@ -54,7 +54,7 @@ different project root)::
     user = www-data
     directory = /path/to/virtualenv
     command = /path/to/virtualenv/bin/gunicorn_django djangopypi2.website.settings
-    environment = DJANGOPYPI2_ROOT=/path/to/djangopypi2
+    environment = DJANGOPYPI2_ROOT='/path/to/djangopypi2'
 
 Configuration
 -------------
