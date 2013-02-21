@@ -66,7 +66,8 @@ in the ``PROJECT_ROOT`` directory::
         "ADMINS": [],
         "LANGUAGE_CODE": "en-us",
         "TIME_ZONE": "America/Chicago",
-        "WEB_ROOT": "/"
+        "WEB_ROOT": "/",
+	"ALLOW_VERSION_OVERWRITE: ""
     }
 
 The ``DEBUG``, ``ADMINS``, ``LANGUAGE_CODE`` and ``TIME_ZONE`` are exactly the same
@@ -74,6 +75,18 @@ as in any Django ``settings.py`` file.
 
 The ``WEB_ROOT`` setting allows for reverse proxy support. By specifying any other
 root than ``/`` you can move the entire site to be served on a different web root.
+
+The ``ALLOW_VERSION_OVERWRITE`` setting allows you to selectively allow clients to
+overwrite package distributions based on the version number. This is a regular 
+expression, with the default empty string meaning 'deny all'. An common use-case
+example of this to allow development versions to be overwritten, but not released
+versions::
+
+    "ALLOW_VERSION_OVERWRITE": "\\.dev.*$"
+
+This will match ``1.0.0.dev``, ``1.0.0.dev3``, but not ``1.0.0``. Note the escaping
+of the backslash character - this is required to conform to the json format. 
+
 
 Package upload directory
 -------------------------
