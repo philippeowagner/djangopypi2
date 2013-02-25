@@ -24,6 +24,7 @@ Full list of contributors
 * David Miller <david@deadpansincerity.com>
 * Tomasz Wysocki
 * Zohar Zilberman <popen2@gmail.com>
+* Edward Easton <eeaston@gmail.com>
 
 External libraries or resources
 -------------------------------

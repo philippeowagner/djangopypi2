@@ -32,7 +32,7 @@ server.
 This can be overridden by setting the ``DJANGOPYPI2_ROOT`` environment variable.
 
 For example, to install with a specific ``PROJECT_ROOT`` /etc/djangopypi2::
-
+    
     # Configure our installation
     $ DJANGOPYPI2_ROOT=/etc/djangopypi2 manage-pypi-site syncdb
     $ DJANGOPYPI2_ROOT=/etc/djangopypi2 manage-pypi-site collectstatic
@@ -67,7 +67,7 @@ in the ``PROJECT_ROOT`` directory::
         "LANGUAGE_CODE": "en-us",
         "TIME_ZONE": "America/Chicago",
         "WEB_ROOT": "/",
-	"ALLOW_VERSION_OVERWRITE: ""
+        "ALLOW_VERSION_OVERWRITE: ""
     }
 
 The ``DEBUG``, ``ADMINS``, ``LANGUAGE_CODE`` and ``TIME_ZONE`` are exactly the same
@@ -78,8 +78,8 @@ root than ``/`` you can move the entire site to be served on a different web roo
 
 The ``ALLOW_VERSION_OVERWRITE`` setting allows you to selectively allow clients to
 overwrite package distributions based on the version number. This is a regular 
-expression, with the default empty string meaning 'deny all'. An common use-case
-example of this to allow development versions to be overwritten, but not released
+expression, with the default empty string meaning 'deny all'. A common use-case
+example of this is to allow development versions to be overwritten, but not released
 versions::
 
     "ALLOW_VERSION_OVERWRITE": "\\.dev.*$"
