@@ -1,13 +1,20 @@
 import os
+from logging import getLogger
+
 from django.conf import settings
 from django.db import models
+from django.db.models.signals import post_delete
 from django.utils.translation import ugettext_lazy as _
 from django.utils import simplejson as json
 from django.utils.datastructures import MultiValueDict
 from django.contrib.auth.models import User
+from django.dispatch import receiver
+
 from ..pypi_metadata.models import DistributionType
 from ..pypi_metadata.models import PythonVersion
 from ..pypi_metadata.models import PlatformName
+
+log = getLogger(__name__)
 
 class ConfigurationManager(models.Manager):
     def latest(self):
@@ -187,6 +194,13 @@ class Distribution(models.Model):
 
     def __unicode__(self):
         return self.filename
+
+
+@receiver(post_delete, sender=Distribution)
+def handle_media_delete(instance, **kwargs):
+    path = os.path.join(settings.MEDIA_ROOT, instance.path)
+    log.info("Deleting file {}".format(path))
+    os.remove(path)
 
 class Review(models.Model):
     release = models.ForeignKey(Release, related_name="reviews")
