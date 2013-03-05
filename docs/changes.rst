@@ -1,5 +1,11 @@
 History
 =======
+0.5.8 (2013-03-05)
+------------------
+* Fix supervisor config so 'environment' works (thanks Toby Champion)
+* Distribution deletion now removes the underlying files (thanks Edward Easton)
+* Added ALLOW_VERSION_OVERWRITE user config (thanks Edward Easton)
+
 0.5.7 (2012-11-15)
 ------------------
 * Fix broken ``admin`` link
