@@ -12,6 +12,7 @@ class XMLRPCResponse(HttpResponse):
     def __init__(self, params=(), methodresponse=True, *args, **kwargs):
         super(XMLRPCResponse, self).__init__(xmlrpclib.dumps(params,
                                                              methodresponse=methodresponse),
+                                            content_type='text/xml',
                                              *args, **kwargs)
 
 def handle_xmlrpc_request(request):
@@ -19,15 +20,14 @@ def handle_xmlrpc_request(request):
     Parse the request and dispatch to the appropriate view
     """
     args, command = xmlrpclib.loads(request.raw_post_data)
-    
+
     if command in XMLRPC_COMMANDS:
         return XMLRPC_COMMANDS[command](request, *args)
     else:
         return HttpResponseNotAllowed(XMLRPC_COMMANDS.keys())
 
 def list_packages(request):
-    return XMLRPCResponse(params=(list(Package.objects.all().values_list('name', flat=True)),),
-                          content_type='text/xml')
+    return XMLRPCResponse(params=(list(Package.objects.all().values_list('name', flat=True)),),)
 
 def package_releases(request, package_name, show_hidden=False):
     try:
@@ -54,7 +54,7 @@ def release_urls(request, package_name, version):
             })
     except (Package.DoesNotExist, Release.DoesNotExist):
         pass
-    
+
     return XMLRPCResponse(params=(dists,))
 
 def release_data(request, package_name, version):
@@ -90,13 +90,13 @@ def release_data(request, package_name, version):
         output.update(release.package_info)
     except (Package.DoesNotExist, Release.DoesNotExist):
         pass
-    
+
     return XMLRPCResponse(params=(output,))
 
 def search(request, spec, operator='or'):
     """
     search(spec[, operator])
-    
+
     Search the package database using the indicated search spec.
     The spec may include any of the keywords described in the above list (except 'stable_version' and 'classifiers'), for example: {'description': 'spam'} will search description fields. Within the spec, a field's value can be a string or a list of strings (the values within the list are combined with an OR), for example: {'name': ['foo', 'bar']}. Valid keys for the spec dict are listed here. Invalid keys are ignored:
     name
@@ -113,12 +113,12 @@ def search(request, spec, operator='or'):
     platform
     download_url
     Arguments for different fields are combined using either "and" (the default) or "or". Example: search({'name': 'foo', 'description': 'bar'}, 'or'). The results are returned as a list of dicts {'name': package name, 'version': package release version, 'summary': package release summary}
-    
+
     changelog(since)
-    
+
     Retrieve a list of four-tuples (name, version, timestamp, action) since the given timestamp. All timestamps are UTC values. The argument is a UTC integer seconds since the epoch.
     """
-    
+
     output = {
         'name': '',
         'version': '',
