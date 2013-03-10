@@ -9,7 +9,7 @@ register = template.Library()
 def saferst(value):
     try:
         from docutils.core import publish_parts
-    except ImportError:
+    except Exception:
         return force_unicode(value)
 
     docutils_settings = getattr(settings, "RESTRUCTUREDTEXT_FILTER_SETTINGS",

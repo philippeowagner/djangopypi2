@@ -46,6 +46,8 @@ setup(
         'setuptools',
         'pkginfo',
         'docutils',
+        'pytz',
+        'django-crispy-forms == 1.2.0',
     ],
 
     setup_requires=[

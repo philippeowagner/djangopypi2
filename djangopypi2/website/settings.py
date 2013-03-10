@@ -89,6 +89,8 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     'django.core.context_processors.request',
 ]
 
+CRISPY_TEMPLATE_PACK = 'bootstrap'
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -103,6 +105,7 @@ INSTALLED_APPS = (
     'djangopypi2.apps.pypi_metadata',
     'djangopypi2.apps.pypi_packages',
     'djangopypi2.apps.pypi_frontend',
+    'crispy_forms',
 )
 
 LOGGING = {
