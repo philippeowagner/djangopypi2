@@ -43,6 +43,7 @@ setup(
     ],
 
     install_requires=[
+        'Django == 1.4.5',
         'setuptools',
         'pkginfo',
         'docutils',

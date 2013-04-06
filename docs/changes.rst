@@ -1,5 +1,9 @@
 History
 =======
+0.5.9
+-----
+* Require Django 1.4.5; 1.5 is not yet supported
+
 0.5.8 (2013-03-05)
 ------------------
 * Fix supervisor config so 'environment' works (thanks Toby Champion)

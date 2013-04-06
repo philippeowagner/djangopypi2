@@ -14,7 +14,7 @@ The most simple way to install ``djangopypi2`` is by::
     $ bash
     $ virtualenv pypi-site
     $ source pypi-site/bin/activate
-    $ pip install django gunicorn djangopypi2
+    $ pip install gunicorn djangopypi2
 
     # Configure our installation
     $ manage-pypi-site syncdb
