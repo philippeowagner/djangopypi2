@@ -1,7 +1,11 @@
 History
 =======
-0.5.9
------
+0.6.0 (2013-04-??)
+------------------
+* Upgrade to Twitter Bootstrap 2.3.1
+
+0.5.9 (2013-04-14)
+------------------
 * Require Django 1.4.5; 1.5 is not yet supported
 
 0.5.8 (2013-03-05)
