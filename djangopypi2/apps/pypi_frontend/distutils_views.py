@@ -15,7 +15,6 @@ from ..pypi_metadata.definitions import METADATA_VERSIONS
 from ..pypi_packages.models import Package
 from ..pypi_packages.models import Release
 from ..pypi_packages.models import Distribution
-from ..pypi_packages.forms import PackageForm, ReleaseForm
 from .basic_auth import basic_auth
 
 log = getLogger(__name__)

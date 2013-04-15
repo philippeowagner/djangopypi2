@@ -1,8 +1,12 @@
 History
 =======
-0.6.0 (2013-04-??)
+0.6.0 (2013-04-28)
 ------------------
 * Upgrade to Twitter Bootstrap 2.3.1
+* Django 1.5 compatibility
+* Added 'delete' button to package and release
+* Added missing links to internal pages
+* Remove useless "empty" operations like editing a package
 
 0.5.9 (2013-04-14)
 ------------------

@@ -1,14 +1,16 @@
 from django.conf import settings
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse_lazy
 from django.forms.models import inlineformset_factory
 from django.http import Http404
 from django.http import HttpResponseRedirect
-from django.views.generic import list_detail
-from django.views.generic import create_update
+from django.views.generic.detail import SingleObjectMixin
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import UpdateView
+from django.views.generic.edit import DeleteView
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from ..pypi_ui.shortcuts import render_to_response
-from .decorators import user_owns_package
+from .mixins import UserOwnsPackage, UserMaintainsPackage
 from .decorators import user_maintains_package
 from .models import Package
 from .models import Release
@@ -17,31 +19,30 @@ from .forms import ReleaseForm
 from .forms import DistributionUploadForm
 from ..pypi_metadata.forms import METADATA_FORMS
 
-def index(request):
-    return list_detail.object_list(request, template_object_name='release', queryset=Release.objects.filter(hidden=False))
+class SingleReleaseMixin(SingleObjectMixin):
+    model = Release
+    slug_field = 'version'
+    slug_url_kwarg = 'version'
+    context_object_name = 'release'
+
+    def get_queryset(self):
+        return self.model.objects.filter(package__name=self.kwargs['package_name'])
+
+class ReleaseDetails(SingleReleaseMixin, DetailView):
+    template_name = 'pypi_packages/release_detail.html'
+
+class DeleteRelease(SingleReleaseMixin, DeleteView, UserOwnsPackage):
+    success_url = reverse_lazy('djangopypi2-packages-index')
+
+class ManageRelease(SingleReleaseMixin, UpdateView, UserMaintainsPackage):
+    template_name = 'pypi_packages/release_manage.html'
+    form_class = ReleaseForm
 
 def _get_release(request, package_name, version):
     release = get_object_or_404(Package, name=package_name).get_release(version)
     if not release:
         raise Http404('Version %s does not exist for %s' % (version, package_name))
     return release
-
-def details(request, package_name, version):
-    release = _get_release(request, package_name, version)
-    return render_to_response('pypi_packages/release_detail.html', dict(release=release),
-                              context_instance=RequestContext(request),
-                              mimetype=settings.DEFAULT_CONTENT_TYPE)
-
-@user_maintains_package()
-def manage(request, package_name, version):
-    release = _get_release(request, package_name, version)
-    return create_update.update_object(
-        request,
-        object_id            = release.pk,
-        form_class           = ReleaseForm,
-        template_name        = 'pypi_packages/release_manage.html',
-        template_object_name = 'release',
-    )
 
 @user_maintains_package()
 def manage_metadata(request, package_name, version):
@@ -119,7 +120,7 @@ def upload_file(request, package_name, version):
             dist.save()
             
             return create_update.redirect(
-                reverse('djangopypi2-release-manage-files',
+                reverse_lazy('djangopypi2-release-manage-files',
                         kwargs=dict(package_name=package_name, version=version)),
                 release)
     else:

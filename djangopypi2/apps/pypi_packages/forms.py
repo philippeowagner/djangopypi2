@@ -11,11 +11,6 @@ log = logging.getLogger(__name__)
 class SimplePackageSearchForm(forms.Form):
     query = forms.CharField(max_length=255)
 
-class PackageForm(forms.ModelForm):
-    class Meta:
-        model = Package
-        exclude = ['name']
-
 class DistributionUploadForm(forms.ModelForm):
     class Meta:
         model = Distribution

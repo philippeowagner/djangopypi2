@@ -1,30 +1,33 @@
 from django.conf import settings
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse_lazy
 from django.db.models.query import Q
 from django.http import Http404, HttpResponseRedirect
 from django.forms.models import inlineformset_factory
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
-from django.views.generic import list_detail
-from django.views.generic import create_update
+from django.views.generic.detail import SingleObjectMixin
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import UpdateView
+from django.views.generic.edit import DeleteView
 from ..pypi_ui.shortcuts import render_to_response
-from .decorators import user_owns_package
-from .decorators import user_maintains_package
+from .mixins import UserOwnsPackage
 from .models import Package
 from .models import Release
 from .forms import SimplePackageSearchForm
-from .forms import PackageForm
 
-def index(request):
-    return list_detail.object_list(request, template_object_name='package', queryset=Package.objects.all())
+class Index(ListView):
+    model = Package
+    context_object_name = 'packages'
 
-def details(request, package_name):
-    return list_detail.object_detail(
-        request,
-        object_id            = package_name,
-        template_object_name = 'package',
-        queryset             = Package.objects.all(),
-    )
+class SinglePackageMixin(SingleObjectMixin):
+    model = Package
+    context_object_name = 'package'
+    slug_url_kwarg = 'package_name'
+    slug_field = 'name'
+
+class PackageDetails(SinglePackageMixin, DetailView):
+    pass
 
 def search(request):
     if request.method == 'POST':
@@ -41,43 +44,5 @@ def search(request):
         queryset             = Package.objects.filter(Q(name__contains=q) | 
                                                       Q(releases__package_info__contains=q)).distinct())
 
-@user_owns_package()
-def manage(request, package_name):
-    return create_update.update_object(
-        request,
-        object_id            = package_name,
-        form_class           = PackageForm,
-        template_name        = 'pypi_packages/package_manage.html',
-        template_object_name = 'package',
-    )
-
-@user_maintains_package()
-def manage_versions(request, package_name):
-    package = get_object_or_404(Package, name=package_name)
-    kwargs.setdefault('formset_factory_kwargs', {})
-    kwargs['formset_factory_kwargs'].setdefault('fields', ('hidden',))
-    kwargs['formset_factory_kwargs']['extra'] = 0
-
-    kwargs.setdefault('formset_factory', inlineformset_factory(Package, Release, **kwargs['formset_factory_kwargs']))
-    kwargs.setdefault('template_name', 'pypi_packages/package_manage_versions.html')
-    kwargs.setdefault('template_object_name', 'package')
-    kwargs.setdefault('extra_context',{})
-    kwargs.setdefault('mimetype',settings.DEFAULT_CONTENT_TYPE)
-    kwargs['extra_context'][kwargs['template_object_name']] = package_name
-    kwargs.setdefault('formset_kwargs',{})
-    kwargs['formset_kwargs']['instance'] = package_name
-
-    if request.method == 'POST':
-        formset = kwargs['formset_factory'](data=request.POST, **kwargs['formset_kwargs'])
-        if formset.is_valid():
-            formset.save()
-            return create_update.redirect(kwargs.get('post_save_redirect', None),
-                                          package_name)
-
-    formset = kwargs['formset_factory'](**kwargs['formset_kwargs'])
-
-    kwargs['extra_context']['formset'] = formset
-
-    return render_to_response(kwargs['template_name'], kwargs['extra_context'],
-                              context_instance=RequestContext(request),
-                              mimetype=kwargs['mimetype'])
+class DeletePackage(SinglePackageMixin, DeleteView, UserOwnsPackage):
+    success_url = reverse_lazy('djangopypi2-packages-index')
