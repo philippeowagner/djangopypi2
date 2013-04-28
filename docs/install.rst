@@ -40,6 +40,10 @@ For example, to install with a specific ``PROJECT_ROOT`` /etc/djangopypi2::
 
 Running
 -------
+
+Gunicorn
+~~~~~~~~
+
 It's easiest to see our server running by executing::
 
     $ gunicorn_django djangopypi2.website.settings
@@ -55,6 +59,40 @@ different project root)::
     directory = /path/to/virtualenv
     command = /path/to/virtualenv/bin/gunicorn_django djangopypi2.website.settings
     environment = DJANGOPYPI2_ROOT='/path/to/djangopypi2'
+
+Apache + mod_wsgi
+~~~~~~~~~~~~~~~~~
+
+If you used ``DJANGOPYPI2_ROOT=/etc/djangopypi2`` ::
+
+    WSGIPythonPath /usr/lib/python2.6/site-packages/djangopypi2/
+    WSGIPassAuthorization On
+    <VirtualHost *:80>
+     
+      Servername pip.example.com
+      ServerAlias *.pip.example.com
+    
+      WSGIScriptAlias / /etc/djangopypi2/wsgi.py
+    
+      CustomLog logs/pip-access_log combined
+      ErrorLog  logs/pip-error_log
+    
+    </VirtualHost>
+
+Note : Adjust ``site-packages`` path with your python version (2.6 on centos6, 2.7 on Ubuntu as of Apr 2013)
+
+
+As for /etc/djangopypi2/wsgi.py::
+
+    import os
+    
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "website.settings")
+    os.environ.setdefault("DJANGOPYPI2_ROOT", "/etc/djangopypi2")
+    
+    from django.core.wsgi import get_wsgi_application
+    application = get_wsgi_application()
+
+
 
 Configuration
 -------------
