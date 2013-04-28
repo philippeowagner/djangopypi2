@@ -2,6 +2,7 @@ History
 =======
 0.6.1 (2013-04-??)
 ------------------
+* Apache+mod_wsgi documentation (thanks Julien Rottenberg <julien@rottenberg.info>)
 
 0.6.0 (2013-04-28)
 ------------------

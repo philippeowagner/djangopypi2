@@ -27,6 +27,7 @@ Full list of contributors
 * Toby Champion <toby@tobychampion.com>
 * Edward Easton <eeaston@gmail.com>
 * Guilherme Souza <guivideojob@gmail.com>
+* Julien Rottenberg <julien@rottenberg.info>
 
 External libraries or resources
 -------------------------------
