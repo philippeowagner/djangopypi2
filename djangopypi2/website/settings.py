@@ -36,6 +36,8 @@ ALLOW_VERSION_OVERWRITE = USER_SETTINGS['ALLOW_VERSION_OVERWRITE']
 
 MANAGERS = ADMINS
 
+ALLOWED_HOSTS = ['*']
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
