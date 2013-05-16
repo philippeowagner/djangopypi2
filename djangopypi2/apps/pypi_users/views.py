@@ -17,7 +17,7 @@ class SingleUserMixin(SingleObjectMixin):
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        return super(Index, self).dispatch(*args, **kwargs)
+        return super(SingleUserMixin, self).dispatch(*args, **kwargs)
 
 class MultipleUsersMixin(MultipleObjectMixin):
     model = User
@@ -27,7 +27,7 @@ class MultipleUsersMixin(MultipleObjectMixin):
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        return super(Index, self).dispatch(*args, **kwargs)
+        return super(MultipleUsersMixin, self).dispatch(*args, **kwargs)
 
 class Index(MultipleUsersMixin, ListView):
     template_name = 'pypi_users/index.html'
