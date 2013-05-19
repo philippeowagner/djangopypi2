@@ -28,6 +28,7 @@ Full list of contributors
 * Edward Easton <eeaston@gmail.com>
 * Guilherme Souza <guivideojob@gmail.com>
 * Julien Rottenberg <julien@rottenberg.info>
+* Marcus Cobden <marcus@marcuscobden.co.uk>
 
 External libraries or resources
 -------------------------------
