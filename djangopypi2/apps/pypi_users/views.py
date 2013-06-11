@@ -13,7 +13,8 @@ class SingleUserMixin(SingleObjectMixin):
     model = User
     slug_field = 'username'
     slug_url_kwarg = 'username'
-    context_object_name = 'user'
+    # avoid clash with 'user' from django.contrib.auth.context_processors.auth
+    context_object_name = 'user_'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
