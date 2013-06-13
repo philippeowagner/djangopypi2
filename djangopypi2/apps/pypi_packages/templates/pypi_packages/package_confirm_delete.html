@@ -22,7 +22,7 @@
   <div class="form-actions">
     {% csrf_token %}
     <button type="submit" class="btn btn-danger">Yes, delete this package</button>
-    <button type="button" class="btn">No, go back</button>
+    <a href="{{ package.get_absolute_url }}" class="btn">No, go back</a>
   </div>
 </form>
 {% endblock %}
