@@ -1,4 +1,3 @@
-from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.views.generic.detail import SingleObjectMixin
@@ -7,7 +6,6 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponseRedirect
 
 class SingleUserMixin(SingleObjectMixin):
     model = User
@@ -35,8 +33,3 @@ class Index(MultipleUsersMixin, ListView):
 
 class UserDetails(SingleUserMixin, DetailView):
     template_name = 'pypi_users/user_profile.html'
-
-@login_required
-def logout(request):
-    auth_logout(request)
-    return HttpResponseRedirect('/')

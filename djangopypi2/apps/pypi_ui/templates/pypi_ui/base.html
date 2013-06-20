@@ -44,13 +44,16 @@
                 {% endif %}
                 <li class="divider"></li>
                 <li>
-                  <a href="{% url 'djangopypi2-logout' %}"><i class="icon-off"></i> Logout</a>
+                  <a href="{% url 'auth_logout' %}"><i class="icon-off"></i> Logout</a>
                 </li>
               </ul>
             </li>
             {% else %}
             <li>
-              <a href="{% url 'djangopypi2-login' %}"><i class="icon-user"></i> Login</a>
+              <a href="{% url 'registration_register' %}"><i class="icon-pencil"></i> Register</a>
+            </li>
+            <li>
+              <a href="{% url 'auth_login' %}"><i class="icon-user"></i> Login</a>
             </li>
             {% endif %}
             
