@@ -44,6 +44,7 @@ setup(
 
     install_requires=[
         'Django == 1.5.1',
+        'django-registration',
         'setuptools',
         'pkginfo',
         'docutils',

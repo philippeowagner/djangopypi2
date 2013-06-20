@@ -82,14 +82,20 @@ ROOT_URLCONF = 'djangopypi2.website.urls'
 
 WSGI_APPLICATION = 'djangopypi2.website.wsgi.application'
 
-LOGIN_URL = '/users/login/'
-LOGOUT_URL = '/users/logout/'
+LOGIN_URL = '/accounts/login/'
+LOGOUT_URL = '/accounts/logout/'
 LOGIN_REDIRECT_URL = '/'
 
 TEMPLATE_CONTEXT_PROCESSORS = [
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.request',
 ]
+
+WEBSITE_ROOT = os.path.dirname(os.path.realpath(__file__))
+
+TEMPLATE_DIRS = (
+    os.path.join(WEBSITE_ROOT, 'templates'),
+)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -99,6 +105,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'registration',
     'djangopypi2.apps.pypi_ui',
     'djangopypi2.apps.pypi_users',
     'djangopypi2.apps.pypi_manage',
@@ -106,6 +113,16 @@ INSTALLED_APPS = (
     'djangopypi2.apps.pypi_packages',
     'djangopypi2.apps.pypi_frontend',
 )
+
+ACCOUNT_ACTIVATION_DAYS = 7
+
+# Run "python -m smtpd -n -c DebuggingServer localhost:1025" to see the email message
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 1025
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_USE_TLS = False
+DEFAULT_FROM_EMAIL = 'sender@example.com'
 
 LOGGING = {
     'version': 1,
