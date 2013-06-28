@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy
 from django.forms.models import inlineformset_factory
 from django.http import Http404
@@ -9,9 +10,9 @@ from django.views.generic.edit import UpdateView
 from django.views.generic.edit import DeleteView
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
+from django.utils.decorators import method_decorator
 from ..pypi_ui.shortcuts import render_to_response
-from .mixins import UserOwnsPackage, UserMaintainsPackage
-from .decorators import user_maintains_package
+from .decorators import user_maintains_package, user_owns_package
 from .models import Package
 from .models import Release
 from .models import Distribution
@@ -31,12 +32,22 @@ class SingleReleaseMixin(SingleObjectMixin):
 class ReleaseDetails(SingleReleaseMixin, DetailView):
     template_name = 'pypi_packages/release_detail.html'
 
-class DeleteRelease(SingleReleaseMixin, DeleteView, UserOwnsPackage):
+class DeleteRelease(SingleReleaseMixin, DeleteView):
     success_url = reverse_lazy('djangopypi2-packages-index')
 
-class ManageRelease(SingleReleaseMixin, UpdateView, UserMaintainsPackage):
+    @method_decorator(user_owns_package())
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(DeleteRelease, self).dispatch(request, *args, **kwargs)
+
+class ManageRelease(SingleReleaseMixin, UpdateView):
     template_name = 'pypi_packages/release_manage.html'
     form_class = ReleaseForm
+
+    @method_decorator(user_maintains_package())
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(ManageRelease, self).dispatch(request, *args, **kwargs)
 
 def _get_release(request, package_name, version):
     release = get_object_or_404(Package, name=package_name).get_release(version)

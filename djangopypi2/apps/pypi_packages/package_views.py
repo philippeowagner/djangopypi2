@@ -1,17 +1,19 @@
 from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
+from django.contrib.auth.decorators import login_required
 from django.db.models.query import Q
 from django.http import Http404, HttpResponseRedirect
 from django.forms.models import inlineformset_factory
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
+from django.utils.decorators import method_decorator
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
 from django.views.generic.edit import DeleteView
 from ..pypi_ui.shortcuts import render_to_response
-from .mixins import UserOwnsPackage
+from .decorators import user_maintains_package, user_owns_package
 from .models import Package
 from .models import Release
 from .forms import SimplePackageSearchForm
@@ -44,5 +46,10 @@ def search(request):
         queryset             = Package.objects.filter(Q(name__contains=q) | 
                                                       Q(releases__package_info__contains=q)).distinct())
 
-class DeletePackage(SinglePackageMixin, DeleteView, UserOwnsPackage):
+class DeletePackage(SinglePackageMixin, DeleteView):
     success_url = reverse_lazy('djangopypi2-packages-index')
+
+    @method_decorator(user_owns_package())
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(DeletePackage, self).dispatch(request, *args, **kwargs)
