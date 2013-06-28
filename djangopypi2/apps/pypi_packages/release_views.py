@@ -85,7 +85,7 @@ def manage_metadata(request, package_name, version):
                     release.package_info.setlist(key, list(value))
             
             release.save()
-            return create_update.redirect(None, release)
+            return HttpResponseRedirect(release.get_absolute_url())
     else:
         form = form_class(initial=initial)
 
@@ -129,11 +129,8 @@ def upload_file(request, package_name, version):
             dist.release = release
             dist.uploader = request.user
             dist.save()
-            
-            return create_update.redirect(
-                reverse_lazy('djangopypi2-release-manage-files',
-                        kwargs=dict(package_name=package_name, version=version)),
-                release)
+            return HttpResponseRedirect(reverse_lazy('djangopypi2-release-manage-files',
+                kwargs=dict(package_name=package_name, version=version)))
     else:
         form = DistributionUploadForm()
 
