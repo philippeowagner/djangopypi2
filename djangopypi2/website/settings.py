@@ -124,6 +124,9 @@ EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = False
 DEFAULT_FROM_EMAIL = 'sender@example.com'
 
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
