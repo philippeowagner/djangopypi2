@@ -7,9 +7,9 @@ PACKAGE = r'(?P<package_name>[\w\d_\.\-]+)'
 VERSION = r'(?P<version>[\w\d_\.\-]+)'
 
 urlpatterns = patterns('',
-    url(r'^search/$'  , package_views.search,name='djangopypi2-search'),
     url(r'^rss/$'     , ReleaseFeed(), name='djangopypi2-rss'),
     url(r'^packages/$', package_views.Index.as_view(), name='djangopypi2-packages-index'),
+    url(r'^packages/search/$', package_views.advanced_search, name='djangopypi2-packages-search'),
 
     url(r'^packages/' + PACKAGE + '/$'       , package_views.PackageDetails.as_view(), name='djangopypi2-package'),
     url(r'^packages/' + PACKAGE + '/delete/$', package_views.DeletePackage.as_view(), name='djangopypi2-package-delete'),

@@ -148,6 +148,11 @@ class Release(models.Model):
     def classifiers(self):
         return self.package_info.getlist('classifier')
 
+    @property
+    def keywords(self):
+        # return keywords as set
+        return set(self.package_info.getlist('keywords')[0].split())
+
     @models.permalink
     def get_absolute_url(self):
         return ('djangopypi2-release', (), {'package_name': self.package.name,
