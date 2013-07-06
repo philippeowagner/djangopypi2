@@ -1,9 +1,10 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy
 from django.db.models.query import Q
 from django.forms.models import inlineformset_factory
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponse, HttpResponseForbidden, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.template import RequestContext
 from django.utils.decorators import method_decorator
@@ -91,6 +92,31 @@ class SinglePackageMixin(SingleObjectMixin):
 
 class PackageDetails(SinglePackageMixin, DetailView):
     pass
+
+class PackagePermission(SinglePackageMixin, UpdateView):
+    template_name = 'pypi_packages/package_permission.html'
+
+    def post(self, request, *args, **kwargs):
+        package = self.get_object()
+        if request.user not in package.owners.all():
+            return HttpResponseForbidden()
+
+        user = get_object_or_404(User, username__exact = self.request.POST['username'])
+        action = self.request.POST['action']
+        relation = self.request.POST['relation']
+        if action == 'add':
+            if relation == 'owner':
+                package.owners.add(user)
+            elif relation == 'maintainer':
+                package.maintainers.add(user)
+        elif action == 'delete':
+            if relation == 'owner':
+                if package.owners.count() == 1:
+                    return HttpResponseForbidden()
+                package.owners.remove(user)
+            elif relation == 'maintainer':
+                package.maintainers.remove(user)
+        return HttpResponse()
 
 class DeletePackage(SinglePackageMixin, DeleteView):
     success_url = reverse_lazy('djangopypi2-packages-index')
