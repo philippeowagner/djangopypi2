@@ -1,15 +1,16 @@
 import os
+import json
 from logging import getLogger
 
 from django.conf import settings
 from django.db import models
 from django.db.models.signals import post_delete
 from django.utils.translation import ugettext_lazy as _
-from django.utils import simplejson as json
 from django.utils.datastructures import MultiValueDict
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 
+from ..pypi_metadata.models import Classifier, ClassifierSerializer
 from ..pypi_metadata.models import DistributionType
 from ..pypi_metadata.models import PythonVersion
 from ..pypi_metadata.models import PlatformName
@@ -59,13 +60,13 @@ class PackageInfoField(models.Field):
                 return MultiValueDict()
         if isinstance(value, dict):
             return MultiValueDict(value)
-        if isinstance(value,MultiValueDict):
+        if isinstance(value, MultiValueDict):
             return value
         raise ValueError('Unexpected value encountered when converting data to python')
 
     def get_prep_value(self, value):
-        if isinstance(value,MultiValueDict):
-            return json.dumps(dict(value.iterlists()))
+        if isinstance(value, MultiValueDict):
+            return json.dumps(dict(value.iterlists()), default = ClassifierSerializer)
         if isinstance(value, dict):
             return json.dumps(value)
         if isinstance(value, basestring) or value is None:
