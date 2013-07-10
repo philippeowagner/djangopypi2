@@ -21,6 +21,7 @@
                     '</td>',
                     '<td>',
                         '<button type="button" class="btn btn-small btn-danger" value="' + username + '" action="delete">Delete</button>',
+                        '<span class="label label-warning"></span>',
                     '</td>',
                 '</tr>'
             ].join("\n");
@@ -40,7 +41,7 @@
                 addRow(tbody, username);
             }
             var fail = function() {
-                buttonDOM.after(" Addition failed!");
+                buttonDOM.next().html("Addition failed!");
             }
             updatePermission("add", relationType, username, success, fail);
         }
@@ -72,7 +73,7 @@
                 parent.remove();
             }
             var fail = function() {
-                buttonDOM.after(" Deletion failed!");
+                buttonDOM.next().html("Deletion failed!");
             }
             updatePermission("delete", relationType, username, success, fail);
         }
@@ -95,6 +96,7 @@
                     '</td>',
                     '<td>',
                         '<button type="button" class="btn btn-small btn-success" action="add" content="' + randomId + '">Save</button>',
+                        '<span class="label label-warning"></span>',
                     '</td>',
                 '</tr>'
             ].join("\n");
