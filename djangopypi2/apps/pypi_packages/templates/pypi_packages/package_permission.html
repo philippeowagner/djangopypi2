@@ -12,7 +12,7 @@
                 "csrfmiddlewaretoken": "{{csrf_token}}"
             }).done(onSuccess).fail(onFail);
         }
-        
+
         function addRow(parent, username) {
             var rowHTML = [
                 '<tr>',
@@ -26,7 +26,7 @@
             ].join("\n");
             parent.append(rowHTML);
         }
-        
+
         function saveRelation(buttonDOM, relationType) {
             var username = $("#" + buttonDOM.attr("content")).val();
             var success = function() {
@@ -50,7 +50,7 @@
         $("#maintainers").delegate("button[action='add']", "click", function() {
             saveRelation($(this), "maintainer");
         });
-        
+
         function deleteRelation(buttonDOM, relationType, username) {
             var username = buttonDOM.attr("value");
             var parent = buttonDOM.closest("tr");
@@ -68,7 +68,7 @@
         $("#maintainers").delegate("button[action='delete']", "click", function() {
             deleteRelation($(this), "maintainer");
         });
-        
+
         function addEmptyRow(parentTBody) {
             //ID must begin with letters
             var randomId = "id" + Math.random().toString().substring(2);
@@ -92,7 +92,7 @@
         $("#add-maintainer").on("click", function() {
             addEmptyRow($("#maintainers-body"));
         });
-        
+
         // Initialize table data
         {% for owner in package.owners.all %}
             addRow($("#owners-body"), "{{ owner.username }}");
