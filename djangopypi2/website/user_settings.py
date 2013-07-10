@@ -8,6 +8,7 @@ AVAILABLE_SETTINGS = [
     dict(name='WEB_ROOT'     , default='/'              , type='str'),
     dict(name='LANGUAGE_CODE', default='en-us'          , type='str'),
     dict(name='ALLOW_VERSION_OVERWRITE', default=''     , type='str'),
+    dict(name='USE_HTTPS'    , default=False            , type='bool'),
 ]
 
 def _filename(project_root):
