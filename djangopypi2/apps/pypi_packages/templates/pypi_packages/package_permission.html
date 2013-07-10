@@ -51,6 +51,20 @@
             saveRelation($(this), "maintainer");
         });
 
+        function formSubmitEvent(formDOM, event) {
+            // Suppress form submit and generate click event instead
+            event.preventDefault();
+            var buttonDOM = formDOM.closest("tr").find("button[action='add']");
+            buttonDOM.click();
+        }
+        $("#owners").delegate("form[action='add']", "submit", function(e) {
+            formSubmitEvent($(this), e);
+        });
+        $("#maintainers").delegate("form[action='add']", "submit", function(e) {
+            formSubmitEvent($(this), e);
+        });
+
+
         function deleteRelation(buttonDOM, relationType, username) {
             var username = buttonDOM.attr("value");
             var parent = buttonDOM.closest("tr");
@@ -75,7 +89,7 @@
             var newRow = [
                 '<tr type="newRow">',
                     '<td width="80%">',
-                        '<form style="margin: 0 0 0">',
+                        '<form action="add" style="margin: 0 0 0">',
                             '<input type="text" id="' + randomId + '" placeholder="Username">',
                         '</form>',
                     '</td>',
