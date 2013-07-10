@@ -105,7 +105,8 @@ in the ``PROJECT_ROOT`` directory::
         "LANGUAGE_CODE": "en-us",
         "TIME_ZONE": "America/Chicago",
         "WEB_ROOT": "/",
-        "ALLOW_VERSION_OVERWRITE: ""
+        "ALLOW_VERSION_OVERWRITE: "",
+        "USE_HTTPS": false
     }
 
 The ``DEBUG``, ``ADMINS``, ``LANGUAGE_CODE`` and ``TIME_ZONE`` are exactly the same
@@ -124,6 +125,9 @@ versions::
 
 This will match ``1.0.0.dev``, ``1.0.0.dev3``, but not ``1.0.0``. Note the escaping
 of the backslash character - this is required to conform to the json format. 
+
+The ``USE_HTTPS`` setting should be set to true if ``djangopypi2`` is served over
+HTTPS.
 
 
 Package upload directory
