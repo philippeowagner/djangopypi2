@@ -5,6 +5,7 @@ from logging import getLogger
 from django.conf import settings
 from django.db import models
 from django.db.models.signals import post_delete
+from django.db.models.query import Q
 from django.utils.translation import ugettext_lazy as _
 from django.utils.datastructures import MultiValueDict
 from django.contrib.auth.models import User
@@ -114,6 +115,50 @@ class Package(models.Model):
         except Release.DoesNotExist:
             return None
 
+    @staticmethod
+    def simple_search(query = ""):
+        return Package.objects.filter(Q(name__icontains=query) | Q(releases__package_info__icontains=query)).distinct()
+
+    @staticmethod
+    def advanced_search(name = "", summary = "", description = "", classifier = None, keyword = None):
+        classifier = classifier if classifier is not None else set()
+        keyword = keyword if keyword is not None else set()
+
+        qset = Package.objects.all()
+        if name:
+            qset = qset.filter(name__icontains = name)
+
+        # manual filtering
+        evaled = False
+        if summary:
+            if not evaled:
+                qset = list(qset)
+            evaled = True
+            qset = filter(lambda x: all(y in x.latest.summary.lower() for y in summary.lower().split()), qset)
+        if description:
+            if not evaled:
+                qset = list(qset)
+            evaled = True
+            qset = filter(lambda x: all(y in x.latest.description.lower() for y in description.lower().split()), qset)
+        if classifier:
+            classifier = set(unicode(x) for x in classifier)
+            if not evaled:
+                qset = list(qset)
+            evaled = True
+            qset = filter(lambda x: set(x.latest.classifiers) & classifier == classifier, qset)
+        if keyword:
+            keyword = set(kword.lower() for kword in keyword)
+            if not evaled:
+                qset = list(qset)
+            evaled = True
+            qset = filter(lambda x: set(y.lower() for y in x.latest.keywords) & keyword == keyword, qset)
+
+        if not evaled:
+            result = list(qset)
+        else:
+            result = qset
+        return result
+
 class Release(models.Model):
     package = models.ForeignKey(Package, related_name="releases", editable=False)
     version = models.CharField(max_length=128, editable=False)
@@ -147,6 +192,11 @@ class Release(models.Model):
     @property
     def classifiers(self):
         return self.package_info.getlist('classifier')
+
+    @property
+    def keywords(self):
+        # return keywords as set
+        return set(self.package_info.getlist('keywords')[0].split())
 
     @models.permalink
     def get_absolute_url(self):

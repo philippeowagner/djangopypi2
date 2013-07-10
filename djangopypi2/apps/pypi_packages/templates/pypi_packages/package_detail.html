@@ -19,6 +19,10 @@
       {% if request.user.is_authenticated %}
       <li class="divider"></li>
       <li>
+        <a href="{% url 'djangopypi2-package-permission' package_name=package.name %}"><i class="icon-check">&nbsp;</i> Manage Permission</a>
+      </li>
+      <li class="divider"></li>
+      <li>
         <a href="{% url 'djangopypi2-package-delete' package_name=package.name %}"><i class="icon-trash">&nbsp;</i> Delete</a>
       </li>
       {% endif %}
