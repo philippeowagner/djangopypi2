@@ -29,6 +29,7 @@ Full list of contributors
 * Guilherme Souza <guivideojob@gmail.com>
 * Julien Rottenberg <julien@rottenberg.info>
 * Marcus Cobden <marcus@marcuscobden.co.uk>
+* Heryandi <heryandi@gmail.com>
 
 External libraries or resources
 -------------------------------
