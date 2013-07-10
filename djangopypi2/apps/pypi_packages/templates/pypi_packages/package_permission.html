@@ -21,6 +21,7 @@
                     '</td>',
                     '<td>',
                         '<button type="button" class="btn btn-small btn-danger" value="' + username + '" action="delete">Delete</button>',
+                        '<span class="label label-warning"></span>',
                     '</td>',
                 '</tr>'
             ].join("\n");
@@ -40,7 +41,7 @@
                 addRow(tbody, username);
             }
             var fail = function() {
-                buttonDOM.after(" Addition failed!");
+                buttonDOM.next().html("Addition failed!");
             }
             updatePermission("add", relationType, username, success, fail);
         }
@@ -51,6 +52,20 @@
             saveRelation($(this), "maintainer");
         });
 
+        function formSubmitEvent(formDOM, event) {
+            // Suppress form submit and generate click event instead
+            event.preventDefault();
+            var buttonDOM = formDOM.closest("tr").find("button[action='add']");
+            buttonDOM.click();
+        }
+        $("#owners").delegate("form[action='add']", "submit", function(e) {
+            formSubmitEvent($(this), e);
+        });
+        $("#maintainers").delegate("form[action='add']", "submit", function(e) {
+            formSubmitEvent($(this), e);
+        });
+
+
         function deleteRelation(buttonDOM, relationType, username) {
             var username = buttonDOM.attr("value");
             var parent = buttonDOM.closest("tr");
@@ -58,7 +73,7 @@
                 parent.remove();
             }
             var fail = function() {
-                buttonDOM.after(" Deletion failed!");
+                buttonDOM.next().html("Deletion failed!");
             }
             updatePermission("delete", relationType, username, success, fail);
         }
@@ -75,12 +90,13 @@
             var newRow = [
                 '<tr type="newRow">',
                     '<td width="80%">',
-                        '<form style="margin: 0 0 0">',
+                        '<form action="add" style="margin: 0 0 0">',
                             '<input type="text" id="' + randomId + '" placeholder="Username">',
                         '</form>',
                     '</td>',
                     '<td>',
                         '<button type="button" class="btn btn-small btn-success" action="add" content="' + randomId + '">Save</button>',
+                        '<span class="label label-warning"></span>',
                     '</td>',
                 '</tr>'
             ].join("\n");
