@@ -50,22 +50,12 @@
 </div>
 {% endifnotequal %}
 
-<div class="row">
-  <span class="span8">
-    <div class="well well-small">
-      {% if release.description %}
-      {{ release.description|saferst }}
-      {% else %}
-      <i>This package has no description</i>
-      {% endif %}
-    </div>
-  </span>
-
-  <span class="span4">
-    {% for classifier in release.classifiers %}
-    <span class="label label-success">{{ classifier }}</span><br>
-    {% endfor %}
-  </span>
+<div class="well well-small">
+    {% if release.description %}
+    {{ release.description|saferst }}
+    {% else %}
+    <i>This package has no description</i>
+    {% endif %}
 </div>
 
 <div class="row">
@@ -110,4 +100,21 @@
     {% endif %}
   </span>
 </div>
+
+<h2>Other Information</h2>
+<ul class="unstyled">
+    <li><strong>Author:</strong> {{ release.author }}</li>
+    <li><strong>Home page:</strong> <a href="{{ release.home_page }}"> {{ release.home_page }} </a></li>
+    <li><strong>Keywords:</strong> {{ release.keywords|join:" " }}</li>
+    <li><strong>License:</strong> {{ release.license }}</li>
+    <li><strong>Classifiers:</strong>
+        <ul>
+            {% for classifier in release.classifiers %}
+            <span class="label label-success">{{ classifier }}</span><br>
+            {% endfor %}
+        </ul>
+    </li>
+    <li><strong>Package owners:</strong> {{ release.package.owners.all|join:", " }}</li>
+</ul>
+
 {% endblock %}
