@@ -186,6 +186,18 @@ class Release(models.Model):
         return self.package_info.get('summary', u'')
 
     @property
+    def author(self):
+        return self.package_info.get('author', u'')
+
+    @property
+    def home_page(self):
+        return self.package_info.get('home_page', u'')
+
+    @property
+    def license(self):
+        return self.package_info.get('license', u'')
+
+    @property
     def description(self):
         return self.package_info.get('description', u'')
 
@@ -196,7 +208,11 @@ class Release(models.Model):
     @property
     def keywords(self):
         # return keywords as set
-        return set(self.package_info.getlist('keywords')[0].split())
+        keywords = self.package_info.getlist('keywords')
+        if keywords:
+            return set(self.package_info.getlist('keywords')[0].split())
+        else:
+            return set()
 
     @models.permalink
     def get_absolute_url(self):
