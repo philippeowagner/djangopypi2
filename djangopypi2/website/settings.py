@@ -118,7 +118,6 @@ INSTALLED_APPS = (
 
 ACCOUNT_ACTIVATION_DAYS = 7
 
-# Run "python -m smtpd -n -c DebuggingServer localhost:1025" to see the email message
 email_server = urlparse.urlparse(USER_SETTINGS['EMAIL_SERVER'])
 EMAIL_HOST = email_server.hostname or 'localhost'
 EMAIL_PORT = email_server.port or '1025'

@@ -106,7 +106,10 @@ in the ``PROJECT_ROOT`` directory::
         "TIME_ZONE": "America/Chicago",
         "WEB_ROOT": "/",
         "ALLOW_VERSION_OVERWRITE: "",
-        "USE_HTTPS": false
+        "USE_HTTPS": false,
+        "EMAIL_SERVER": "smtp://localhost:1025/",
+        "EMAIL_USE_TLS": false,
+        "EMAIL_DEFAULT_SENDER": "sender@example.com"
     }
 
 The ``DEBUG``, ``ADMINS``, ``LANGUAGE_CODE`` and ``TIME_ZONE`` are exactly the same
@@ -128,6 +131,20 @@ of the backslash character - this is required to conform to the json format.
 
 The ``USE_HTTPS`` setting should be set to true if ``djangopypi2`` is served over
 HTTPS.
+
+The ``EMAIL_SERVER`` should contain the SMTP server address in this format::
+
+    smtp://username:password@host:port/
+
+If no authentication is needed, then ``smtp://host:port/`` is sufficient.
+To see the email messages sent with the default value of this setting,
+run ``python -m smtpd -n -c DebuggingServer localhost:1025`` in a terminal.
+
+The ``EMAIL_USE_TLS`` should be set to true if TLS should be used to connect to
+the SMTP server.
+
+The ``EMAIL_DEFAULT_SENDER`` setting allows you to set the default sender email
+for the SMTP server.
 
 
 Package upload directory
