@@ -9,6 +9,10 @@ AVAILABLE_SETTINGS = [
     dict(name='LANGUAGE_CODE', default='en-us'          , type='str'),
     dict(name='ALLOW_VERSION_OVERWRITE', default=''     , type='str'),
     dict(name='USE_HTTPS'    , default=False            , type='bool'),
+
+    dict(name='EMAIL_SERVER' , default='smtp://localhost:1025/', type='str'),
+    dict(name='EMAIL_USE_TLS', default=False            , type='bool'),
+    dict(name='EMAIL_DEFAULT_SENDER', default='sender@example.com', type='str'),
 ]
 
 def _filename(project_root):

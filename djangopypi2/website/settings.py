@@ -1,6 +1,7 @@
+import errno
 import os
 import sys
-import errno
+import urlparse
 from . import user_settings
 
 def ensure_directory(path):
@@ -118,12 +119,14 @@ INSTALLED_APPS = (
 ACCOUNT_ACTIVATION_DAYS = 7
 
 # Run "python -m smtpd -n -c DebuggingServer localhost:1025" to see the email message
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = 1025
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
-EMAIL_USE_TLS = False
-DEFAULT_FROM_EMAIL = 'sender@example.com'
+email_server = urlparse.urlparse(USER_SETTINGS['EMAIL_SERVER'])
+EMAIL_HOST = email_server.hostname or 'localhost'
+EMAIL_PORT = email_server.port or '1025'
+EMAIL_HOST_USER = email_server.username or ''
+EMAIL_HOST_PASSWORD = email_server.password or ''
+
+EMAIL_USE_TLS = USER_SETTINGS['EMAIL_USE_TLS']
+DEFAULT_FROM_EMAIL = USER_SETTINGS['EMAIL_DEFAULT_SENDER']
 
 if USE_HTTPS:
     SESSION_COOKIE_SECURE = True
