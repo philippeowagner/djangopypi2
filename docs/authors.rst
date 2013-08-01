@@ -30,6 +30,7 @@ Full list of contributors
 * Julien Rottenberg <julien@rottenberg.info>
 * Marcus Cobden <marcus@marcuscobden.co.uk>
 * Heryandi <heryandi@gmail.com>
+* EisenSheng <eisensheng@gmail.com>
 
 External libraries or resources
 -------------------------------
