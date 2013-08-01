@@ -113,20 +113,31 @@ def search(request, spec, operator='or'):
     platform
     download_url
     Arguments for different fields are combined using either "and" (the default) or "or". Example: search({'name': 'foo', 'description': 'bar'}, 'or'). The results are returned as a list of dicts {'name': package name, 'version': package release version, 'summary': package release summary}
+    """
 
+    # Note: The implementation below is just enough to make "pip search" works.
+    # It is not the full implementation of PyPI XMLRPC API
+    name = spec['name']
+    summary = spec['summary']
+
+    results = Release.simple_search(name, summary)
+    response = []
+    for result in results:
+        output = {
+            'name': result.package.name,
+            'version': result.version,
+            'summary': result.package_info["summary"],
+        }
+        response.append(output)
+    return XMLRPCResponse(params=(response,))
+
+def changelog(since):
+    """
     changelog(since)
 
     Retrieve a list of four-tuples (name, version, timestamp, action) since the given timestamp. All timestamps are UTC values. The argument is a UTC integer seconds since the epoch.
     """
 
-    output = {
-        'name': '',
-        'version': '',
-        'summary': '',
-    }
-    return XMLRPCResponse(params=(output,))
-
-def changelog(since):
     output = {
         'name': '',
         'version': '',
@@ -143,7 +154,7 @@ XMLRPC_COMMANDS = {
     'package_releases': package_releases,
     'release_urls': release_urls,
     'release_data': release_data,
-    #'search': search, Not done yet
+    'search': search,
     #'changelog': changelog, Not done yet
     #'ratings': ratings, Not done yet
 }

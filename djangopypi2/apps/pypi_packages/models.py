@@ -218,6 +218,9 @@ class Release(models.Model):
     def get_absolute_url(self):
         return ('djangopypi2-release', (), {'package_name': self.package.name,
                                             'version': self.version})
+    @staticmethod
+    def simple_search(name = "", summary = ""):
+        return Release.objects.filter(Q(package__name__icontains=name) | Q(package_info__icontains=summary)).distinct()
 
 def distribution_upload_path(instance, filename):
     configuration = Configuration.objects.latest()
