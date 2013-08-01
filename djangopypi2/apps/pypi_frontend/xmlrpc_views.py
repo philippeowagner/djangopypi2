@@ -27,7 +27,7 @@ def handle_xmlrpc_request(request):
         return HttpResponseNotAllowed(XMLRPC_COMMANDS.keys())
 
 def list_packages(request):
-    return XMLRPCResponse(params=(list(Package.objects.all().values_list('name', flat=True)),),)
+    return XMLRPCResponse(params=(list(Package.objects.values_list('name', flat=True).order_by('name').all()),),)
 
 def package_releases(request, package_name, show_hidden=False):
     try:
