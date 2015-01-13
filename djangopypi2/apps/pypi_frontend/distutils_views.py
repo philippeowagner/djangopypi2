@@ -197,8 +197,8 @@ def _handle_uploads(request, release):
 
     return 'upload accepted'
 
-def list_classifiers(request, mimetype='text/plain'):
-    response = HttpResponse(mimetype=mimetype)
+def list_classifiers(request, content_type='text/plain'):
+    response = HttpResponse(content_type=content_type)
     response.write(u'\n'.join(map(lambda c: c.name,Classifier.objects.all())))
     return response
 

@@ -62,20 +62,26 @@ def parse_distutils_request(request):
         pass
     
     for part in filter(lambda e: e.strip(), request.body.split(sep)):
-        # normalize line endings:
-        # newer distutils can submit \r\n end-of-line marks.
-        part = part.replace('\r\n', '\n')
         try:
             header, content = part.lstrip().split('\n',1)
         except Exception, e:
             continue
-        
+
+        # normalize line endings:
+        # newer distutils can submit \r\n end-of-line marks.
+        if header.endswith('\r'):
+            header = header[:-1]
+            
+        if content.startswith('\r'):
+            content = content[1:]
         if content.startswith('\n'):
             content = content[1:]
         
         if content.endswith('\n'):
             content = content[:-1]
-        
+        if content.endswith('\r'):
+            content = content[:-1]
+
         headers = _parse_header(header)
         
         if "name" not in headers:
