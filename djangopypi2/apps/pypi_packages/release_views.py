@@ -93,7 +93,7 @@ def manage_metadata(request, package_name, version):
         'pypi_packages/release_manage.html',
         dict(release=release, form=form),
         context_instance = RequestContext(request),
-        mimetype         = settings.DEFAULT_CONTENT_TYPE,
+        content_type         = settings.DEFAULT_CONTENT_TYPE,
     )
 
 @user_maintains_package()
@@ -115,7 +115,7 @@ def manage_files(request, package_name, version):
         'pypi_packages/release_manage_files.html',
         dict(release=release, formset=formset, upload_form=DistributionUploadForm()),
         context_instance = RequestContext(request),
-        mimetype         = settings.DEFAULT_CONTENT_TYPE,
+        content_type         = settings.DEFAULT_CONTENT_TYPE,
     )
 
 @user_maintains_package()
@@ -138,5 +138,5 @@ def upload_file(request, package_name, version):
         'pypi_packages/release_upload_file.html',
         dict(release=release, form=form),
         context_instance = RequestContext(request),
-        mimetype         = settings.DEFAULT_CONTENT_TYPE,
+        content_type         = settings.DEFAULT_CONTENT_TYPE,
     )

@@ -55,7 +55,7 @@ def simple_details(request, package_name):
         return HttpResponseRedirect(reverse('djangopypi2-simple-package-info', kwargs=dict(package_name=package.name)))
     return render_to_response('pypi_frontend/package_detail_simple.html',
                               context_instance=RequestContext(request, dict(package=package)),
-                              mimetype='text/html')
+                              content_type='text/html')
 
 @_mirror_if_not_found('pypi')
 def package_details(request, package_name):
@@ -67,10 +67,10 @@ def package_doap(request, package_name):
     package = get_object_or_404(Package, name=package_name)
     return render_to_response('pypi_frontend/package_doap.xml',
                               context_instance=RequestContext(request, dict(package=package)),
-                              mimetype='text/xml')
+                              content_type='text/xml')
 
 def release_doap(request, package_name, version):
     release = get_object_or_404(Release, package__name=package_name, version=version)
     return render_to_response('pypi_frontend/release_doap.xml',
                               context_instance=RequestContext(request, dict(release=release)),
-                              mimetype='text/xml')
+                              content_type='text/xml')
