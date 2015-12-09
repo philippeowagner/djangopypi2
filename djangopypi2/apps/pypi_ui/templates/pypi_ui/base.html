@@ -4,17 +4,17 @@
 <html>
   <head>
     <title>{% block supertitle %}{% block title %}Welcome{% endblock %} - Pypi{% endblock %}</title>
-    <link href="{% static "bootstrap/css/bootstrap.min.css" %}" rel="stylesheet" />
+    <link href="{% static "djangopypi2/bootstrap/css/bootstrap.min.css" %}" rel="stylesheet" />
     <link href="{% static "css/djangopypi2.css" %}" rel="stylesheet" />
     <script src="//code.jquery.com/jquery-latest.js"></script>
-    <script src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
+    <script src="{% static "djangopypi2/bootstrap/js/bootstrap.min.js" %}"></script>
     {% block extra_head %}{% endblock %}
   </head>
 
   <body>
     <div id="external-container">
       {% block navbar %}
-      <div class="navbar navbar-default navbar-fixed-top">
+      <div class="navbar">
         <div class="navbar-inner">
           <div class="container pull-left">
             <a class="brand" href="/">Django PyPi</a>
