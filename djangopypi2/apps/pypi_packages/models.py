@@ -63,6 +63,9 @@ class PackageInfoField(models.Field):
         if isinstance(value, MultiValueDict):
             return value
         raise ValueError('Unexpected value encountered when converting data to python')
+        
+    def from_db_value(self, value, expression, connection, context):
+        return self.to_python(value)
 
     def get_prep_value(self, value):
         if isinstance(value, MultiValueDict):
