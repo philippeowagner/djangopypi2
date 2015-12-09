@@ -47,7 +47,6 @@ class Configuration(models.Model):
 
 class PackageInfoField(models.Field):
     description = u'Python Package Information Field'
-    __metaclass__ = models.SubfieldBase
 
     def __init__(self, *args, **kwargs):
         kwargs['editable'] = False
