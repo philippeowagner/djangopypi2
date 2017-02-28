@@ -26,7 +26,7 @@ class Forbidden(Exception):
     pass
 
 @basic_auth
-@transaction.commit_manually
+@transaction.atomic
 def register_or_upload(request):
     try:
         _verify_post_request(request)
@@ -37,18 +37,14 @@ def register_or_upload(request):
         response = _handle_uploads(request, release)
     except BadRequest, error:
         log.error(error)
-        transaction.rollback()
         return HttpResponseBadRequest(str(error), 'text/plain')
     except Forbidden, error:
         log.error(error)
-        transaction.rollback()
         return HttpResponseForbidden(str(error), 'text/plain')
     except Exception, error:
         log.error(Exception)
-        transaction.rollback()
         raise
 
-    transaction.commit()
     return HttpResponse(response, 'text/plain')
 
 def _verify_post_request(request):

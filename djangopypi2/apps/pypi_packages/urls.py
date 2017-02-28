@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from .feeds import ReleaseFeed
 from . import package_views
 from . import release_views
@@ -7,7 +7,7 @@ PACKAGE = r'(?P<package_name>[\w\d_\.\-]+)'
 VERSION = r'(?P<version>[\w\d_\.\-]+)'
 USERNAME = r'(?P<username>[\w\d_.@+-]+)'
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^rss/$'     , ReleaseFeed(), name='djangopypi2-rss'),
     url(r'^packages/$', package_views.Index.as_view(), name='djangopypi2-packages-index'),
     url(r'^packages/search/$', package_views.advanced_search, name='djangopypi2-packages-search'),
@@ -23,4 +23,4 @@ urlpatterns = patterns('',
     url(r'^packages/' + PACKAGE + '/' + VERSION + '/edit-metadata/$', release_views.manage_metadata, name='djangopypi2-release-edit-metadata'),
     url(r'^packages/' + PACKAGE + '/' + VERSION + '/files/$'        , release_views.manage_files, name='djangopypi2-release-manage-files'),
     url(r'^packages/' + PACKAGE + '/' + VERSION + '/files/upload/$' , release_views.upload_file, name='djangopypi2-release-upload-file'),
-)
+    ]

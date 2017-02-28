@@ -1,6 +1,6 @@
 import logging
 import urlparse
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.views.static import serve as static_serve
@@ -18,17 +18,16 @@ def static_urls():
     parsed_url = urlparse.urlparse(settings.STATIC_URL)
     if parsed_url.netloc:
         log.debug('Cannot serve STATIC files since settings.STATIC_URL points outside this server.')
-        return patterns('')
-    return patterns('',
-                    url(r'^' + settings.STATIC_URL.strip('/') + r'/(?P<path>.*)$',
-                        static_serve, dict(document_root=settings.STATIC_ROOT)),
-                    url(r'^' + settings.MEDIA_URL.strip('/') + r'/(?P<path>.*)$',
-                        static_serve, dict(document_root=settings.MEDIA_ROOT)),
-                    )
+        return []
+    return [url(r'^' + settings.STATIC_URL.strip('/') + r'/(?P<path>.*)$',
+                static_serve, dict(document_root=settings.STATIC_ROOT)),
+            url(r'^' + settings.MEDIA_URL.strip('/') + r'/(?P<path>.*)$',
+                static_serve, dict(document_root=settings.MEDIA_ROOT)),
+            ]
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^' + (settings.USER_SETTINGS['WEB_ROOT'].strip('/') + r'/'      ).lstrip('/'), include('djangopypi2.urls')),
     url(r'^' + (settings.USER_SETTINGS['WEB_ROOT'].strip('/') + r'/admin/').lstrip('/'), include(admin.site.urls)),
     url(r'^' + (settings.USER_SETTINGS['WEB_ROOT'].strip('/') + r'/accounts/logout/$').lstrip('/'), logout, {'next_page': '/' + settings.USER_SETTINGS['WEB_ROOT'].strip('/')}, name = 'auth_logout'),
     url(r'^' + (settings.USER_SETTINGS['WEB_ROOT'].strip('/') + r'/accounts/').lstrip('/'), include('registration.backends.default.urls')),
-) + static_urls()
+    ] + static_urls()
